@@ -9,7 +9,7 @@ Route::get('/', function () {
 })->name('login');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('layouts.dashlayout');
 })->name('dashboard');
 
 // Route::get('/dashboard', function () {
