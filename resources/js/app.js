@@ -1,7 +1,16 @@
-import './bootstrap';
+import "./bootstrap";
+import { createApp } from "vue";
 
-import Alpine from 'alpinejs';
+import loginVue from "./components/Auth/login.vue";
+import Sidevue from "./components/Nav/Sidenav.vue";
+import Topvue from "./components/Nav/Topnav.vue";
 
-window.Alpine = Alpine;
+const app = createApp({
+    components: {
+        loginVue,
+        Sidevue,
+        Topvue,
+    },
+});
 
-Alpine.start();
+app.mount("#app");
