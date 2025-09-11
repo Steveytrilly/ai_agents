@@ -5,6 +5,7 @@
             <!-- Form here -->
             <form
                 class="top-0 flex items-center flex-1 h-screen ml-2 max lg:sticky"
+                @submit.prevent="handleLogin"
             >
                 <div class="w-full responsive">
                     <h2
@@ -22,22 +23,28 @@
                             >
                             <input
                                 type="email"
+                                v-model="email"
+                                id="email"
                                 name="email"
                                 placeholder="Your email address"
                                 class="px-5 py-4 mt-2 text-white bg-transparent border border-solid cursor-pointer focus:ring-0 focus:outline-none focus:border-bordercolor border-bordercolor rounded-2xl text-md"
+                                required
                             />
                         </div>
 
                         <div class="flex flex-col relative max-[973px]:-mt-7">
                             <label
                                 for="password"
+                                id="password"
                                 class="block mt-10 font-semibold max-[973px]:font-light text-white text-md"
                                 >Password</label
                             >
                             <input
+                                v-model="password"
                                 name="password"
                                 placeholder="Enter your password"
                                 class="py-4 pl-5 mt-2 text-white bg-transparent border-solid cursor-pointer pr-9 focus:ring-0 focus:outline-none focus:border-bordercolor border-bordercolor rounded-2xl text-md"
+                                required
                             />
                             <span
                                 class="cursor-pointer absolute right-3 top-[82px]"
@@ -74,11 +81,23 @@
                         </div>
                     </div>
 
-                    <button
+                    <!-- <button
                         class="w-full px-5 py-3 mt-7 bg-[#705CF6] rounded-[14px]"
                     >
                         Log In
+                    </button> -->
+
+                    <button
+                        type="submit"
+                        :disabled="auth.loading"
+                        class="w-full !py-3 bg-[#705CF6] rounded-[14px] mt-10"
+                    >
+                        {{ auth.loading ? "Logging in..." : "Login" }}
                     </button>
+
+                    <!-- <p v-if="auth.error" class="text-red-500 text-sm mt-2">
+                        {{ auth.error }}
+                    </p> -->
                 </div>
             </form>
 
@@ -118,23 +137,17 @@
 </template>
 
 <script setup>
-import axios from "axios";
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
+import { useAuthStore } from "../../stores/auth";
 
-const test = async () => {
-    try {
-        const res = await axios.get(
-            window.location.origin + "/ai-agents" // use API route
-        );
-        console.log(res.data);
-    } catch (error) {
-        console.error(error.response?.data || error.message);
-    }
+const email = ref("");
+const password = ref("");
+const auth = useAuthStore();
+
+const handleLogin = async () => {
+    // console.log("🔍 Submitting login form...");
+    await auth.login({ email: email.value, password: password.value });
 };
-
-onMounted(() => {
-    test();
-});
 </script>
 
 <style scoped>

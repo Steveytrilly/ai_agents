@@ -49,16 +49,19 @@ class LoginController extends Controller
 
         // ✅ Session login
         Auth::login($user);
-        $request->session()->regenerate(); // important for session security
+        // $request->session()->regenerate(); // important for session security
 
         $user->last_login = now();
         $user->save();
+
+        $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             "error" => false,
             "message" => 'Welcome',
             "redirect_to" => route('dashboard'),
             "user" => Auth::user(),
+            "token" => $token
         ], 200);
     }
 }
