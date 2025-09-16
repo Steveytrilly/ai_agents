@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ✅ Flowbite theme variables */
+@import "flowbite/src/themes/default";
+
 body {
     margin: 0px;
     font-family: "Nunito", sans-serif;

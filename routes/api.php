@@ -5,6 +5,12 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SsoConsumeController;
 use App\Http\Controllers\AiAgentsController;
 
+// Route::get('/dashboard', function () {
+//     return view('layouts.dashlayout');
+// })->middleware(['auth:sanctum'])->name('dashboard');
+
+
+
 Route::prefix('v1')->group(function () {
     Route::post('/login', [LoginController::class, 'login'])
         ->name('auth.login.account');

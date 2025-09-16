@@ -5,14 +5,21 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SsoConsumeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AiAgentsController;
+use App\Http\Controllers\User\PagesController;
+
 
 Route::get('/', function () {
     return view('auth.login');
 })->name('login');
 
-Route::get('/dashboard', function () {
-    return view('layouts.dashlayout');
-})->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return view('layouts.dashlayout');
+// })->name('dashboard');
+
+Route::get('/dashboard', [PagesController::class, 'dashboard'])->name('dashboard');
+
+Route::get('/dashboard/agents', [PagesController::class, 'agent'])->name('agent');
+
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard');

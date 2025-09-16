@@ -1,12 +1,13 @@
 @extends('layouts.rootlayout')
 @section('content')
-<div class="relative w-full h-full">
+<div class="relative w-full h-full flex gap-x-4">
             <!-- Sidenav -->
-            <x-nav.side-nav  />
+            <x-nav.side-nav  /> 
             <!-- Sidenav -->
-            <div class="body  ml-[84px] md:ml-[100px] rounded-2xl mx-4 right-0 left-0 flex flex-col">
-                 <!-- Topnav -->
-                   <x-nav.top-nav  />
+
+            <div class="body  md:ml-[100px] rounded-2xl  right-0 left-0 flex flex-col">
+                 <!-- Topnav -->               
+                     <Top-Vue :title='@json($title)'> </Top-Vue>
                    <!-- Topnav -->
                    <!-- left-[80px] md:left-[100px] max-[861px]:-ml-[80px] max-[861px]:-mr-[17px] right-4 top-2 absolute dark:bg-main-alt bottom-1 pb-10 mb-2 mt-[75px] rounded-2xl overflow-hidden  max-[680px]:overflow-auto isScrollable -->
                 <main
@@ -18,3 +19,6 @@
         </div>
 
 @endsection
+
+
+
