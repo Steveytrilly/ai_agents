@@ -50,7 +50,7 @@ class AiAgentsController extends Controller
                 }
             }
             // Assuming you have an AiAgentsModel to handle the database operations
-            $image = $request->file('image') ? uploadAgentImage($request) : ['file' => '"https://res.cloudinary.com/dkykwfhy5/image/upload/v1757423939/ai_agents/tv6gmhwvmzwrxsaitbr1.jpg'];
+            $image = $request->file('image') ? uploadAgentImage($request) : ['file' => 'https://res.cloudinary.com/dkykwfhy5/image/upload/v1757423939/ai_agents/tv6gmhwvmzwrxsaitbr1.jpg'];
 
             $aiAgent = new AiAgentsModel();
             $aiAgent->name = $request->name;

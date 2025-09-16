@@ -4,6 +4,9 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SsoConsumeController;
 use App\Http\Controllers\AiAgentsController;
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
 
 // Route::get('/dashboard', function () {
 //     return view('layouts.dashlayout');
@@ -14,7 +17,7 @@ use App\Http\Controllers\AiAgentsController;
 Route::prefix('v1')->group(function () {
     Route::post('/login', [LoginController::class, 'login'])
         ->name('auth.login.account');
-    Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware('auth')->group(function () {
         Route::post('create/ai-agent', [AiAgentsController::class, 'create'])
             ->name('ai_agents.create');
         Route::post('edit/ai-agent', [AiAgentsController::class, 'edit'])
@@ -27,4 +30,3 @@ Route::prefix('v1')->group(function () {
             ->name('ai_agents.delete');
     });
 });
-
