@@ -17,7 +17,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix('v1')->group(function () {
     Route::post('/login', [LoginController::class, 'login'])
         ->name('auth.login.account');
-    Route::middleware('auth')->group(function () {
+    Route::middleware('auth:sanctum')->group(function () {
         Route::post('create/ai-agent', [AiAgentsController::class, 'create'])
             ->name('ai_agents.create');
         Route::post('edit/ai-agent', [AiAgentsController::class, 'edit'])

@@ -1,20 +1,20 @@
 <template>
     <div class="mt-5">
-        <div class="flex items-start gap-4">
-            <div class="w-[180px]">
-                <span
-                    @click="dropDown = true"
-                    class="flex items-center justify-between gap-2 border border-[#2F2F30] p-2 rounded-[14px] w-full"
+        <div class="flex items-center gap-4">
+            <div class="w-[180px] relative">
+                <button
+                    @click.stop="toggleDropdown('dropdown')"
+                    class="flex items-center justify-between gap-2 border border-[#2F2F30] p-3 rounded-[14px] w-full"
                 >
                     <p class="text-[15px] text-[#C6CCD8] font-normal">
                         Category
                     </p>
-                    <img src="/public/assets/icons/arrow-down.svg" alt="" />
-                </span>
+                    <img src="../../../../public/assets/icons/arrow-down.svg" />
+                </button>
 
                 <ul
-                    v-if="dropDown"
-                    class="bg-[#363739] mt-2 text-[14px] font-normal text-white px-2 py-1 rounded-[8px]"
+                    v-if="openDropdown === 'dropdown'"
+                    class="bg-[#363739] mt-2 text-[14px] z-50 absolute font-normal text-white px-2 py-1 rounded-[8px]"
                 >
                     <li class="hover:bg-[#38334F] p-2 rounded-[8px]">All</li>
                     <li class="hover:bg-[#38334F] p-2 rounded-[8px]">Sales</li>
@@ -30,27 +30,36 @@
                 </ul>
             </div>
 
-            <div
-                class="flex items-center w-[180px] p-2 gap-2 border border-[#2F2F30] rounded-[14px]"
-            >
-                <p class="text-[15px] text-[#C6CCD8] font-normal">Category</p>
-                <img src="/public/assets/icons/arrow-down.svg" alt="" />
+            <div class="relative w-full max-w-md">
+                <input
+                    v-model="searchQuery"
+                    type="text"
+                    placeholder="Search Consultant..."
+                    class="w-full bg-transparent font-normal text-gray-300 placeholder-gray-400 pl-10 pr-4 py-3 rounded-xl border border-[#2F2F30] outline-none focus:ring-0"
+                />
+
+                <img
+                    src="../../../../public/assets/icons/search.svg"
+                    class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5"
+                />
             </div>
         </div>
 
         <div class="grid grid-cols-4 gap-5 mt-7">
             <div
                 class="bg-[#202123] p-4 rounded-[16px] relative"
-                v-for="agents in list"
+                v-for="agents in filteredList"
                 :key="agents.id"
             >
                 <span class="flex items-center justify-between">
-                    <img :src="agents.agent_image" />
-                    <button
-                        :id="`dropdownDefaultButton-${agents.id}`"
-                        :data-dropdown-toggle="`dropdown-${agents.id}`"
-                    >
-                        <img src="/public/assets/icons/dot.svg" alt="" />
+                    <!-- <img :src="agents.agent_image" /> -->
+                    <img :src="cleanUrl(agents.agent_image)" />
+
+                    <button @click.stop="toggleDropdown(agents.id)">
+                        <img
+                            src="../../../../public/assets/icons/dot.svg"
+                            alt=""
+                        />
                     </button>
                 </span>
 
@@ -61,15 +70,15 @@
                 ></Editagent>
 
                 <ul
-                    :id="`dropdown-${agents.id}`"
-                    :aria-labelledby="`dropdownDefaultButton-${agents.id}`"
-                    class="bg-[#262729] p-2 max-w-[164px] hidden rounded-md font-normal"
+                    v-if="openDropdown === agents.id"
+                    tabindex="-1"
+                    class="bg-[#262729] absolute right-10 top-6 p-2 max-w-[164px] rounded-md font-normal"
                 >
                     <li
                         @click="showModal('editAgent' + agents.id)"
                         class="flex items-center gap-2 hover:bg-[#38334F] p-2 rounded-md cursor-pointer"
                     >
-                        <img src="/public/assets/icons/edit.svg" />
+                        <img src="../../../../public/assets/icons/edit.svg" />
                         <p class="text-[14px]">Edit</p>
                     </li>
 
@@ -77,22 +86,24 @@
                         class="flex items-center gap-2 hover:bg-[#38334F] p-2 rounded-md cursor-pointer"
                         @click="duplicateAgent(agents.id)"
                     >
-                        <img src="/public/assets/icons/duplicate.svg" />
+                        <img
+                            src="../../../../public/assets/icons/duplicate.svg"
+                        />
                         <p class="text-[14px]">Duplicate</p>
                     </li>
 
                     <li
                         class="flex items-center gap-2 hover:bg-[#38334F] p-2 rounded-md cursor-pointer"
                     >
-                        <img src="/public/assets/icons/recall.svg" />
+                        <img src="../../../../public/assets/icons/recall.svg" />
                         <p class="text-[14px] text-[#24B26B]">Build</p>
                     </li>
 
                     <li
-                        @click="showModal('delete')"
+                        @click="showModal('delete' + agents.id)"
                         class="flex items-center gap-2 hover:bg-[#38334F] p-2 rounded-md cursor-pointer"
                     >
-                        <img src="/public/assets/icons/delete.svg" />
+                        <img src="../../../../public/assets/icons/delete.svg" />
                         <p class="text-[14px] text-[#FF6640]">Delete</p>
                     </li>
                 </ul>
@@ -111,16 +122,22 @@
 
                 <div
                     class="backdrop hidden"
-                    @click.self="close_modal(['delete'])"
-                    id="delete"
+                    @click.self="close_modal(['delete' + agents.id])"
+                    :id="`delete${agents.id}`"
                 >
                     <div class="modal">
                         <span class="flex items-center justify-between">
                             <p class="text-[20px] font-semibold">
                                 Deleting Content
                             </p>
-                            <button @click.self="close_modal(['delete'])">
-                                <img src="/public/assets/icons/x.svg" />
+                            <button
+                                @click.self="
+                                    close_modal(['delete' + agents.id])
+                                "
+                            >
+                                <img
+                                    src="../../../../public/assets/icons/x.svg"
+                                />
                             </button>
                         </span>
 
@@ -145,27 +162,48 @@
             </div>
         </div>
     </div>
+
+    <Createagent :agent="agentsList"></Createagent>
 </template>
 
 <script setup>
 import Btn from "../Atoms/Button.vue";
 
 import api from "../../lib/api_functions";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onBeforeUnmount, computed } from "vue";
 import { showModal, close_modal } from "../../utils/utils";
 import Editagent from "../Modals/Editagent.vue";
+import Createagent from "../Modals/Createagent.vue";
 
-const dropDown = ref(false);
+const cleanUrl = (url) =>
+    url ? url.replace(/^"|"$/g, "").replace(/\\/g, "") : "";
+
 const list = ref([]);
+const searchQuery = ref("");
+const openDropdown = ref(null);
+
+function toggleDropdown(id) {
+    openDropdown.value = openDropdown.value === id ? null : id;
+}
+
+function handleClickOutside(e) {
+    // Close dropdown if clicked outside of any
+    if (!e.target.closest("ul") && !e.target.closest("button")) {
+        openDropdown.value = null;
+    }
+}
 
 const agentsList = async () => {
     try {
         const res = await api.listAgents();
-        if (res) {
-            list.value = res.data;
+        if (res && res.data) {
+            list.value = res.data.map((agent) => ({
+                ...agent,
+                agent_image: cleanUrl(agent.agent_image),
+            }));
         }
-    } catch (error) {
-        console.log(error);
+    } catch (err) {
+        console.log(err);
     }
 };
 
@@ -183,28 +221,32 @@ const duplicateAgent = async (id) => {
     }
 };
 
-// const ages = [12, 13, 14, 15, 17, 18, 22];
+// Computed property: filters list whenever searchQuery changes
+const filteredList = computed(() => {
+    if (!searchQuery.value) return list.value; // if empty search, show all
 
-// const test = ages.filter((age) => {
-//     return age > 13;
-// });
-
-// console.log(test);
+    return list.value.filter(
+        (agent) =>
+            agent.name
+                .toLowerCase()
+                .includes(searchQuery.value.toLowerCase()) ||
+            agent.description
+                .toLowerCase()
+                .includes(searchQuery.value.toLowerCase())
+    );
+});
 
 onMounted(() => {
     agentsList();
+    document.addEventListener("click", handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+    document.removeEventListener("click", handleClickOutside);
 });
 </script>
 
 <style scoped>
-#app [id^="dropdown-"] {
-    position: absolute !important;
-    inset: auto !important;
-    transform: none !important;
-    bottom: 20px !important; /* adjust manually */
-    right: 1.5rem !important;
-}
-
 .backdrop {
     position: fixed;
     top: 0;

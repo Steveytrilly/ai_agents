@@ -9,7 +9,7 @@
                 <h3 class="text-[26px]">Edit AI Agent</h3>
 
                 <button @click="close_modal([modalId])">
-                    <img src="/public/assets/icons/x.svg" />
+                    <img src="../../../../public/assets/icons/x.svg" />
                 </button>
             </span>
 
@@ -71,7 +71,9 @@
 
                         <!-- Right: Delete Icon -->
                         <button @click.prevent="removeImage">
-                            <img src="/public/assets/icons/delete.svg" />
+                            <img
+                                src="../../../../public/assets/icons/delete.svg"
+                            />
                         </button>
                     </label>
 
@@ -91,32 +93,6 @@
         </div>
     </div>
 </template>
-
-<!-- <script setup>
-import Btn from "../Atoms/Button.vue";
-import { close_modal } from "../../utils/utils";
-import { ref, watch } from "vue";
-import api from "../../lib/api_functions";
-
-// const props = defineProps({
-//     agent: {
-//         type: Object,
-//         required: true,
-//     },
-//     modalId: {
-//         type: String,
-//         required: true,
-//     },
-// });
-
-const props = defineProps({
-  agent: Object,
-  modalId: String,
-});
-
-
-
-</script> -->
 
 <script setup>
 import Btn from "../Atoms/Button.vue";

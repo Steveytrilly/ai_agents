@@ -29,14 +29,18 @@
 
                 <ul class="flex items-center gap-5">
                     <li>
-                        <img src="/public/assets/icons/setting.svg" />
+                        <img
+                            src="../../../../public/assets/icons/setting.svg"
+                        />
                     </li>
                     <li>
-                        <img src="/public/assets/icons/notification.svg" />
+                        <img
+                            src="../../../../public/assets/icons/notification.svg"
+                        />
                     </li>
 
                     <li class="border-l border-[#424347] pl-5">
-                        <img src="/public/assets/icons/avatar.svg" />
+                        <img src="../../../../public/assets/icons/avatar.svg" />
                     </li>
                 </ul>
             </div>

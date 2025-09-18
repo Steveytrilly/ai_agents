@@ -32,5 +32,12 @@ class PagesController extends Controller
         $data['title'] = 'Agents';
         return view($this->template . '.dashboard.Agents.agent', $data);
     }
+
+     public function builder()
+    {
+        $data['title'] = 'Builder';
+        return view($this->template . '.dashboard.Agents.builder', $data);
+    }
+    
     
 }

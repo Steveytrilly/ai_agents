@@ -9,7 +9,7 @@
                 <h3 class="text-[26px]">Create AI Agent</h3>
 
                 <button @click="close_modal(['create'])">
-                    <img src="/public/assets/icons/x.svg" />
+                    <img src="../../../../public/assets/icons/x.svg" />
                 </button>
             </span>
 
@@ -72,7 +72,9 @@
 
                         <!-- Right: Delete Icon -->
                         <button @click="removeImage">
-                            <img src="/public/assets/icons/delete.svg" />
+                            <img
+                                src="../../../../public/assets/icons/delete.svg"
+                            />
                         </button>
                     </label>
 
@@ -99,10 +101,10 @@ import { close_modal } from "../../utils/utils";
 import Btn from "../Atoms/Button.vue";
 import api from "../../lib/api_functions";
 import { ref } from "vue";
-// const defaultImage = "/public/assets/icons/image.svg";
 
 const previewImage = ref("");
 const fileName = ref("");
+const backendImage = ref(""); // for image returned from backend
 
 const agents = ref({
     name: "",
@@ -111,15 +113,39 @@ const agents = ref({
     image: "",
 });
 
+const props = defineProps({
+    agent: {
+        type: Object,
+    },
+});
+
+// const create = async () => {
+//     const formData = new FormData();
+//     formData.append("name", agents.value.name);
+//     formData.append("description", agents.value.description);
+//     // formData.append("category_id", agents.value.category);
+//     if (fileInput.value) formData.append("agent_image", fileInput.value);
+//     const res = await api.createAgent(formData);
+//     if (res) {
+//         console.log("Created agent:", res);
+//         close_modal("create");
+//     } else {
+//         console.error("Failed to create agent");
+//     }
+// };
+
 const create = async () => {
     const formData = new FormData();
     formData.append("name", agents.value.name);
     formData.append("description", agents.value.description);
-    // formData.append("category_id", agents.value.category);
     if (fileInput.value) formData.append("agent_image", fileInput.value);
+
     const res = await api.createAgent(formData);
-    if (res) {
+    if (res && res.data) {
+        props.agent();
         console.log("Created agent:", res);
+        // set backend image URL
+        backendImage.value = res.data.agent_image.replace(/^"|"$/g, "");
         close_modal("create");
     } else {
         console.error("Failed to create agent");
@@ -142,11 +168,11 @@ function handleFileUpload(event) {
     }
 }
 
-function removeImage() {
-    previewImage.value = "";
-    fileName.value = "";
-    agents.value.image = "";
-}
+// function removeImage() {
+//     previewImage.value = "";
+//     fileName.value = "";
+//     agents.value.image = "";
+// }
 </script>
 
 <style scoped>

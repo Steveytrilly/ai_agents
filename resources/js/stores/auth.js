@@ -85,9 +85,90 @@ import Swal from "sweetalert2";
 //     },
 // });
 
+// export const useAuthStore = defineStore("auth", {
+//     state: () => ({
+//         user: null,
+//         token: localStorage.getItem("token") || null,
+//         loading: false,
+//         error: null,
+//     }),
+
+//     actions: {
+//         // 🔹 LOGIN ACTION
+//         async login(credentials) {
+//             this.loading = true;
+//             this.error = null;
+
+//             try {
+//                 const res = await api.post("/login", credentials);
+
+//                 if (!res.data.error) {
+//                     // Save user and token
+//                     this.user = res.data.user;
+//                     this.token = res.data.token;
+//                     localStorage.setItem("token", this.token);
+
+//                     // Success alert
+//                     Swal.fire({
+//                         icon: "success",
+//                         title: "Welcome",
+//                         text:
+//                             res.data.message ||
+//                             "You have successfully logged in!",
+//                         timer: 1500,
+//                         showConfirmButton: false,
+//                     }).then(() => {
+//                         // Redirect after alert
+//                         if (res.data.redirect_to) {
+//                             window.location.href = res.data.redirect_to;
+//                         } else {
+//                             window.location.href = "/dashboard";
+//                         }
+//                     });
+//                 } else {
+//                     this.error = res.data.message;
+
+//                     Swal.fire({
+//                         icon: "error",
+//                         title: "Login Failed",
+//                         text: this.error,
+//                     });
+//                 }
+//             } catch (err) {
+//                 this.error = err.response?.data?.message || "Login failed";
+
+//                 Swal.fire({
+//                     icon: "error",
+//                     title: "Error",
+//                     text: this.error,
+//                 });
+//             } finally {
+//                 this.loading = false;
+//             }
+//         },
+
+//         // 🔹 LOGOUT ACTION
+//         logout() {
+//             this.user = null;
+//             this.token = null;
+//             localStorage.removeItem("token");
+
+//             Swal.fire({
+//                 icon: "info",
+//                 title: "Logged out",
+//                 text: "You have been logged out.",
+//                 timer: 1500,
+//                 showConfirmButton: false,
+//             }).then(() => {
+//                 window.location.href = "/login";
+//             });
+//         },
+//     },
+// });
+
 export const useAuthStore = defineStore("auth", {
     state: () => ({
-        user: null,
+        user: JSON.parse(localStorage.getItem("user")) || null,
         token: localStorage.getItem("token") || null,
         loading: false,
         error: null,
@@ -103,10 +184,11 @@ export const useAuthStore = defineStore("auth", {
                 const res = await api.post("/login", credentials);
 
                 if (!res.data.error) {
-                    // Save user and token
+                    // Save user + token
                     this.user = res.data.user;
                     this.token = res.data.token;
                     localStorage.setItem("token", this.token);
+                    localStorage.setItem("user", JSON.stringify(this.user));
 
                     // Success alert
                     Swal.fire({
@@ -118,7 +200,7 @@ export const useAuthStore = defineStore("auth", {
                         timer: 1500,
                         showConfirmButton: false,
                     }).then(() => {
-                        // Redirect after alert
+                        // Redirect after login
                         if (res.data.redirect_to) {
                             window.location.href = res.data.redirect_to;
                         } else {
@@ -147,11 +229,34 @@ export const useAuthStore = defineStore("auth", {
             }
         },
 
+        // 🔹 CHECK AUTH ACTION
+        async checkAuth() {
+            // console.log("🔍 Running checkAuth...");
+
+            if (!this.token) {
+                // console.warn("❌ No token found in localStorage.");
+                this.user = null;
+                return false;
+            }
+
+            // Restore user if saved
+            const savedUser = localStorage.getItem("user");
+            if (savedUser) {
+                this.user = JSON.parse(savedUser);
+                return true;
+            }
+
+            // Token exists but no user → still consider logged in (minimal trust)
+            this.user = null;
+            return true;
+        },
+
         // 🔹 LOGOUT ACTION
         logout() {
             this.user = null;
             this.token = null;
             localStorage.removeItem("token");
+            localStorage.removeItem("user");
 
             Swal.fire({
                 icon: "info",

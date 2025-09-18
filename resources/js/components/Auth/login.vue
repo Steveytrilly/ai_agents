@@ -109,7 +109,9 @@
                 <div class="flex flex-col items-center w-[100%]">
                     <div class="w-[100%]">
                         <div class="flex justify-center w-[100%]">
-                            <img src="/public/assets/icons/Gig.svg" />
+                            <img
+                                src="../../../../public/assets/icons/Gig.svg"
+                            />
                             <!-- <img
                                 src="/assets/images/login_with_text3.svg"
                                 class="max-[1890px]:w-[400px] w-[320px] max-[973px]:hidden min-[1900px]:w-[600px]"
