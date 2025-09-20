@@ -43,10 +43,7 @@
                 <div class="p-4">
                     <div class="flex items-center gap-6">
                         <span class="flex items-center gap-1">
-                            <img
-                                src="../../../../public/assets/icons/count.svg"
-                                alt=""
-                            />
+                            <img src="/assets/icons/count.svg" alt="" />
                             <p class="text-white text-[14px] font-normal">1</p>
                         </span>
 
@@ -79,26 +76,18 @@
                         </span>
 
                         <div class="flex items-center gap-3">
-                            <img
-                                src="../../../../public/assets/icons/toggle.svg"
-                            />
+                            <img src="/assets/icons/toggle.svg" />
 
                             <button
                                 class="bg-[rgba(244,244,245,0.25)] rounded-[4px] p-2"
                             >
-                                <img
-                                    src="../../../../public/assets/icons/edit2.svg"
-                                    alt=""
-                                />
+                                <img src="/assets/icons/edit2.svg" alt="" />
                             </button>
 
                             <button
                                 class="bg-[rgba(244,244,245,0.25)] rounded-[4px] p-2"
                             >
-                                <img
-                                    src="../../../../public/assets/icons/delete2.svg"
-                                    alt=""
-                                />
+                                <img src="/assets/icons/delete2.svg" alt="" />
                             </button>
                         </div>
                     </div>
@@ -120,14 +109,12 @@
                         <p class="text-[13px] font-bold text-[#718096]">
                             Details
                         </p>
-                        <img src="../../../../public/assets/icons/toggle.svg" />
+                        <img src="/assets/icons/toggle.svg" />
 
                         <button
                             class="bg-white w-[100px] flex items-center justify-center p-2 rounded-[5px]"
                         >
-                            <img
-                                src="../../../../public/assets/icons/recall2.svg"
-                            />
+                            <img src="/assets/icons/recall2.svg" />
                             <p class="text-[13px] text-[#1A3643] font-semibold">
                                 Restart
                             </p>

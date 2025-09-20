@@ -9,7 +9,7 @@
                 <h3 class="text-[26px]">Edit AI Agent</h3>
 
                 <button @click="close_modal([modalId])">
-                    <img src="../../../../public/assets/icons/x.svg" />
+                    <img src="/assets/icons/x.svg" />
                 </button>
             </span>
 
@@ -71,9 +71,7 @@
 
                         <!-- Right: Delete Icon -->
                         <button @click.prevent="removeImage">
-                            <img
-                                src="../../../../public/assets/icons/delete.svg"
-                            />
+                            <img src="/assets/icons/delete.svg" />
                         </button>
                     </label>
 

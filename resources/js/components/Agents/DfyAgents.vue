@@ -9,7 +9,7 @@
                     <p class="text-[15px] text-[#C6CCD8] font-normal">
                         Category
                     </p>
-                    <img src="../../../../public/assets/icons/arrow-down.svg" />
+                    <img src="/assets/icons/arrow-down.svg" />
                 </button>
 
                 <ul
@@ -39,7 +39,7 @@
                 />
 
                 <img
-                    src="../../../../public/assets/icons/search.svg"
+                    src="/assets/icons/search.svg"
                     class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5"
                 />
             </div>
@@ -56,10 +56,7 @@
                     <img :src="cleanUrl(agents.agent_image)" />
 
                     <button @click.stop="toggleDropdown(agents.id)">
-                        <img
-                            src="../../../../public/assets/icons/dot.svg"
-                            alt=""
-                        />
+                        <img src="/assets/icons/dot.svg" alt="" />
                     </button>
                 </span>
 
@@ -78,7 +75,7 @@
                         @click="showModal('editAgent' + agents.id)"
                         class="flex items-center gap-2 hover:bg-[#38334F] p-2 rounded-md cursor-pointer"
                     >
-                        <img src="../../../../public/assets/icons/edit.svg" />
+                        <img src="assets/icons/edit.svg" />
                         <p class="text-[14px]">Edit</p>
                     </li>
 
@@ -86,16 +83,14 @@
                         class="flex items-center gap-2 hover:bg-[#38334F] p-2 rounded-md cursor-pointer"
                         @click="duplicateAgent(agents.id)"
                     >
-                        <img
-                            src="../../../../public/assets/icons/duplicate.svg"
-                        />
+                        <img src="/assets/icons/duplicate.svg" />
                         <p class="text-[14px]">Duplicate</p>
                     </li>
 
                     <li
                         class="flex items-center gap-2 hover:bg-[#38334F] p-2 rounded-md cursor-pointer"
                     >
-                        <img src="../../../../public/assets/icons/recall.svg" />
+                        <img src="/assets/icons/recall.svg" />
                         <p class="text-[14px] text-[#24B26B]">Build</p>
                     </li>
 
@@ -103,7 +98,7 @@
                         @click="showModal('delete' + agents.id)"
                         class="flex items-center gap-2 hover:bg-[#38334F] p-2 rounded-md cursor-pointer"
                     >
-                        <img src="../../../../public/assets/icons/delete.svg" />
+                        <img src="/assets/icons/delete.svg" />
                         <p class="text-[14px] text-[#FF6640]">Delete</p>
                     </li>
                 </ul>
@@ -135,9 +130,7 @@
                                     close_modal(['delete' + agents.id])
                                 "
                             >
-                                <img
-                                    src="../../../../public/assets/icons/x.svg"
-                                />
+                                <img src="/assets/icons/x.svg" />
                             </button>
                         </span>
 
