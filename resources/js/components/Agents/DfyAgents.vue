@@ -34,8 +34,8 @@
                 <input
                     v-model="searchQuery"
                     type="text"
-                    placeholder="Search Consultant..."
-                    class="w-full bg-transparent font-normal text-gray-300 placeholder-gray-400 pl-10 pr-4 py-3 rounded-xl border border-[#2F2F30] outline-none focus:ring-0"
+                    placeholder="Search Agents..."
+                    class="w-full bg-transparent font-normal text-gray-300 placeholder-gray-400 pl-10 pr-4 py-3 rounded-xl border border-[#2F2F30] focus:border-[#2F2F30] foocus:outline-none focus:ring-0"
                 />
 
                 <img

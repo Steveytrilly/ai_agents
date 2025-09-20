@@ -1,7 +1,7 @@
 <template>
-    <div class="grid h-screen grid-cols-[2fr_1fr] w-full">
+    <div class="grid h-screen grid-cols-[2fr_1fr] w-full gap-3 p-3">
         <!-- Left side -->
-        <div class="p-3 overflow-auto">
+        <div class="overflow-auto">
             <div class="bg-[#202123] rounded-[11px] border border-[#2F2F30]">
                 <span
                     class="flex items-center justify-between border-b p-4 border-[#2F2F30]"
@@ -107,7 +107,7 @@
         </div>
 
         <!-- Right side -->
-        <div class="p-3 border-l overflow-auto">
+        <div class="overflow-auto">
             <div
                 class="bg-[#202123] rounded-[11px] border border-[#2F2F30] p-3"
             >
@@ -134,11 +134,30 @@
                         </button>
                     </span>
                 </div>
+
+                <div class="mt-3">
+                    <p
+                        class="text-[12px] font-normal text-[#718096] capitalize italic"
+                    >
+                        1 User input
+                    </p>
+
+                    <p class="text-[14px] font-normal pt-2">
+                        What is the name of your business?
+                    </p>
+                    <input
+                        type="text"
+                        class="w-full border border-[#2F2F30] focus:border-[#2F2F30] p-3 rounded-[3px] bg-transparent mt-2 focus:outline-none focus:ring-0"
+                    />
+                </div>
             </div>
         </div>
     </div>
+
+    <Actions></Actions>
 </template>
 
 <script setup>
 import Btn from "../Atoms/Button.vue";
+import Actions from "../Modals/Actions/Actions.vue";
 </script>
