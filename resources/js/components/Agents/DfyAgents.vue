@@ -75,7 +75,7 @@
                         @click="showModal('editAgent' + agents.id)"
                         class="flex items-center gap-2 hover:bg-[#38334F] p-2 rounded-md cursor-pointer"
                     >
-                        <img src="assets/icons/edit.svg" />
+                        <img src="/assets/icons/edit.svg" />
                         <p class="text-[14px]">Edit</p>
                     </li>
 

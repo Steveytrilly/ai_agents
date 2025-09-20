@@ -4,7 +4,7 @@
             <span class="flex items-center justify-between">
                 <p class="text-[20px] font-bold">Action Library</p>
                 <button>
-                    <img src="../../../../../public/assets/icons/x.svg" />
+                    <img src="/assets/icons/x.svg" />
                 </button>
             </span>
 
@@ -17,17 +17,14 @@
                 />
 
                 <img
-                    src="../../../../../public/assets/icons/search.svg"
+                    src="/assets/icons/search.svg"
                     class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5"
                 />
             </div>
 
             <div class="border-t border-[#2F2F30] pt-t mt-5">
                 <span class="flex items-center gap-2 mt-5">
-                    <img
-                        src="../../../../../public/assets/icons/action.svg"
-                        alt=""
-                    />
+                    <img src="/assets/icons/action.svg" alt="" />
 
                     <p class="text-[14px] font-semibold text-[#705CF6]">
                         Engine Categories
@@ -44,9 +41,7 @@
                                 : ''
                         "
                     >
-                        <img
-                            src="../../../../../public/assets/icons/input.svg"
-                        />
+                        <img src="/assets/icons/input.svg" />
                         <p class="text-[16px] font-medium">
                             Inputs & Data Retrieval Engine
                         </p>
@@ -60,9 +55,7 @@
                             @click="openForm('get-user-input')"
                             class="hover:bg-[#2F2F30] cursor-pointer p-3 rounded-[4px] flex items-center gap-3 border border-[#2F2F30]"
                         >
-                            <img
-                                src="../../../../../public/assets/icons/input.svg"
-                            />
+                            <img src="/assets/icons/input.svg" />
                             <span>
                                 <p class="text-[14px] font-semibold">
                                     Get User Input
@@ -80,9 +73,7 @@
                             @click="openForm('get-user-list')"
                             class="hover:bg-[#2F2F30] cursor-pointer p-3 rounded-[4px] flex items-center gap-3 border border-[#2F2F30]"
                         >
-                            <img
-                                src="../../../../../public/assets/icons/input.svg"
-                            />
+                            <img src="/assets/icons/input.svg" />
                             <span>
                                 <p class="text-[14px] font-semibold">
                                     Get User List
@@ -98,9 +89,7 @@
                         <li
                             class="hover:bg-[#2F2F30] cursor-pointer p-3 rounded-[4px] flex items-center gap-3 border border-[#2F2F30]"
                         >
-                            <img
-                                src="../../../../../public/assets/icons/input.svg"
-                            />
+                            <img src="/assets/icons/input.svg" />
                             <span>
                                 <p class="text-[14px] font-semibold">
                                     Get User File
@@ -117,9 +106,7 @@
                         <li
                             class="hover:bg-[#2F2F30] cursor-pointer p-3 rounded-[4px] flex items-center gap-3 border border-[#2F2F30]"
                         >
-                            <img
-                                src="../../../../../public/assets/icons/input.svg"
-                            />
+                            <img src="/assets/icons/input.svg" />
                             <span>
                                 <p class="text-[14px] font-semibold">
                                     Get User Knowledge Files
@@ -135,9 +122,7 @@
                         <li
                             class="hover:bg-[#2F2F30] cursor-pointer p-3 rounded-[4px] flex items-center gap-3 border border-[#2F2F30]"
                         >
-                            <img
-                                src="../../../../../public/assets/icons/input.svg"
-                            />
+                            <img src="/assets/icons/input.svg" />
                             <span>
                                 <p class="text-[14px] font-semibold">
                                     Wait for User Confirmation
@@ -153,9 +138,7 @@
                         <li
                             class="hover:bg-[#2F2F30] cursor-pointer p-3 rounded-[4px] flex items-center gap-3 border border-[#2F2F30]"
                         >
-                            <img
-                                src="../../../../../public/assets/icons/input.svg"
-                            />
+                            <img src="/assets/icons/input.svg" />
                             <span>
                                 <p class="text-[14px] font-semibold">
                                     Web Page Content
@@ -172,9 +155,7 @@
                         <li
                             class="hover:bg-[#2F2F30] cursor-pointer p-3 rounded-[4px] flex items-center gap-3 border border-[#2F2F30]"
                         >
-                            <img
-                                src="../../../../../public/assets/icons/input.svg"
-                            />
+                            <img src="/assets/icons/input.svg" />
                             <span>
                                 <p class="text-[14px] font-semibold">
                                     Click Go to Continue
@@ -192,9 +173,7 @@
                         @click="showActive = 'dfy'"
                         class="hover:bg-[#2F2F30] w-full cursor-pointer p-3 rounded-[4px] flex items-center gap-3"
                     >
-                        <img
-                            src="../../../../../public/assets/icons/socialmedia.svg"
-                        />
+                        <img src="/assets/icons/socialmedia.svg" />
                         <p class="text-[16px] font-medium">
                             Social Media Data Retrieval Engine
                         </p>
@@ -207,9 +186,7 @@
                     <button
                         class="hover:bg-[#2F2F30] w-full cursor-pointer p-3 rounded-[4px] flex items-center gap-3"
                     >
-                        <img
-                            src="../../../../../public/assets/icons/img1.svg"
-                        />
+                        <img src="/assets/icons/img1.svg" />
                         <p class="text-[16px] font-medium">
                             Audience & Contact Retrieval Engine
                         </p>
@@ -218,9 +195,7 @@
                     <button
                         class="hover:bg-[#2F2F30] w-full cursor-pointer p-3 rounded-[4px] flex items-center gap-3"
                     >
-                        <img
-                            src="../../../../../public/assets/icons/img1.svg"
-                        />
+                        <img src="/assets/icons/img1.svg" />
                         <p class="text-[16px] font-medium">
                             Content Generation & Processing Engines
                         </p>
@@ -229,9 +204,7 @@
                     <button
                         class="hover:bg-[#2F2F30] w-full cursor-pointer p-3 rounded-[4px] flex items-center gap-3"
                     >
-                        <img
-                            src="../../../../../public/assets/icons/img2.svg"
-                        />
+                        <img src="/assets/icons/img2.svg" />
                         <p class="text-[16px] font-medium">
                             Email Marketing Provider Engines
                         </p>
@@ -240,9 +213,7 @@
                     <button
                         class="hover:bg-[#2F2F30] w-full cursor-pointer p-3 rounded-[4px] flex items-center gap-3"
                     >
-                        <img
-                            src="../../../../../public/assets/icons/img3.svg"
-                        />
+                        <img src="/assets/icons/img3.svg" />
                         <p class="text-[16px] font-medium">
                             Social Media Engagement Engines
                         </p>
@@ -251,9 +222,7 @@
                     <button
                         class="hover:bg-[#2F2F30] w-full cursor-pointer p-3 rounded-[4px] flex items-center gap-3"
                     >
-                        <img
-                            src="../../../../../public/assets/icons/engines.svg"
-                        />
+                        <img src="/assets/icons/engines.svg" />
                         <p class="text-[16px] font-medium">
                             Email Engagement Analytics Engines
                         </p>
