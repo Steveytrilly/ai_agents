@@ -25,6 +25,12 @@ class PagesController extends Controller
         return view('layouts.dashlayout', $data);
     }
 
+       public function home()
+    {
+        $data['title'] = 'Dashboard';
+     return view($this->template . '.dashboard.home', $data);
+    }
+
   
 
     public function agent()

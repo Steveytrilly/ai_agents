@@ -35,7 +35,7 @@
                     v-model="searchQuery"
                     type="text"
                     placeholder="Search Agents..."
-                    class="w-full bg-transparent font-normal text-gray-300 placeholder-gray-400 pl-10 pr-4 py-3 rounded-xl border border-[#2F2F30] focus:border-[#2F2F30] foocus:outline-none focus:ring-0"
+                    class="w-full bg-transparent font-normal text-gray-300 placeholder-gray-400 pl-10 pr-4 py-3 rounded-xl border border-[#2F2F30] focus:border-[#2F2F30] focus:outline-none focus:ring-0"
                 />
 
                 <img
@@ -51,9 +51,12 @@
                 v-for="agents in filteredList"
                 :key="agents.id"
             >
-                <span class="flex items-center justify-between">
+                <span class="flex items-start justify-between">
                     <!-- <img :src="agents.agent_image" /> -->
-                    <img :src="cleanUrl(agents.agent_image)" />
+                    <img
+                        :src="cleanUrl(agents.agent_image)"
+                        class="rounded-full w-[80px] h-[80px]"
+                    />
 
                     <button @click.stop="toggleDropdown(agents.id)">
                         <img src="/assets/icons/dot.svg" alt="" />
@@ -103,7 +106,7 @@
                     </li>
                 </ul>
 
-                <h3 class="text-[20px] font-medium pt-2">
+                <h3 class="text-[20px] font-medium pt-4">
                     {{ agents.name }}
                 </h3>
 
@@ -173,12 +176,11 @@ const cleanUrl = (url) =>
 
 const list = ref([]);
 const searchQuery = ref("");
-const openDropdown = ref(null);
 
+const openDropdown = ref(null);
 function toggleDropdown(id) {
     openDropdown.value = openDropdown.value === id ? null : id;
 }
-
 function handleClickOutside(e) {
     // Close dropdown if clicked outside of any
     if (!e.target.closest("ul") && !e.target.closest("button")) {

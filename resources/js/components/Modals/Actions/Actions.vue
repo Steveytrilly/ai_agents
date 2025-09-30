@@ -1,9 +1,13 @@
 <template>
-    <div class="backdrop" id="action">
+    <div
+        class="backdrop hidden"
+        id="action"
+        @click.self="close_modal(['action'])"
+    >
         <div class="modal p-5">
             <span class="flex items-center justify-between">
                 <p class="text-[20px] font-bold">Action Library</p>
-                <button>
+                <button @click="close_modal(['action'])">
                     <img src="/assets/icons/x.svg" />
                 </button>
             </span>

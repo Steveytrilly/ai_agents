@@ -41,7 +41,7 @@
                     >
                     <textarea
                         v-model="agents.description"
-                        class="w-full mt-2 resize-none h-[110px] border border-[#2F2F30] rounded-[14px] bg-transparent"
+                        class="w-full mt-2 resize-none h-[110px] border border-[#2F2F30] rounded-[14px] bg-transparent focus:border-[#2F2F30] focus:outline-none focus:ring-0"
                     ></textarea>
                 </div>
 

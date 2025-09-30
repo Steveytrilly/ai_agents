@@ -37,6 +37,7 @@
                     <Btn
                         title="Add action"
                         class="text-[12px] !font-bold text-white"
+                        @click="showModal('action')"
                     ></Btn>
                 </span>
 
@@ -147,4 +148,5 @@
 <script setup>
 import Btn from "../Atoms/Button.vue";
 import Actions from "../Modals/Actions/Actions.vue";
+import { showModal } from "../../utils/utils";
 </script>

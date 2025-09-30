@@ -46,6 +46,13 @@ async function editAgents(form) {
         .catch((e) => handleError(e));
 }
 
+// async function useAgents(id) {
+//     return await ax
+//         .post("/use/ai-agent", { agent_id: id })
+//         .then((res) => res.data)
+//         .catch((e) => handleError(e));
+// }
+
 export default {
     createAgent,
     listAgents,

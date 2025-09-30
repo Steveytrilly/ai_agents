@@ -9,6 +9,7 @@ import SideVue from "./components/Nav/Sidenav.vue";
 import TopVue from "./components/Nav/Topnav.vue";
 import AgentVue from "./components/Agents/Agent.vue";
 import BuilderVue from "./components/Builder/Builder.vue";
+import DashboardVue from "./components/Dashboard.vue";
 
 const app = createApp({
     components: {
@@ -17,6 +18,7 @@ const app = createApp({
         TopVue,
         AgentVue,
         BuilderVue,
+        DashboardVue,
     },
 });
 
