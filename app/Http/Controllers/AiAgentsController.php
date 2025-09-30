@@ -2,16 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AgentActionsModel;
 use App\Models\AiAgentsModel;
 use Auth;
 use Illuminate\Http\Request;
 use Log;
+use Str;
 use Validator;
 class AiAgentsController extends Controller
 {
     public function index(Request $request)
     {
         try {
+            $request->dfy = $request->dfy == 1 ? true : false;
+            if($request->dfy){
+                $aiAgents = AiAgentsModel::get();
+                $aiAgents = $aiAgents->filter(function ($agent) {
+                    return $agent->agent_type === 'dfy';
+                });
+            }
             $aiAgents = AiAgentsModel::where('user_id', Auth::id())->get();
 
             return response()->json([
@@ -57,6 +66,7 @@ class AiAgentsController extends Controller
             $aiAgent->user_id = Auth::id(); // assuming user is authenticated
             $aiAgent->description = $request->description;
             $aiAgent->category_id = Auth::id(); // assuming user is authenticated
+            $aiAgent->run_id = Str::uuid();
             $aiAgent->agent_image = $image['file']; // default image
             $aiAgent->save();
 
@@ -236,6 +246,110 @@ class AiAgentsController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to delete AI Agent: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+    public function useAgent(Request $request)
+    {
+        try {
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'agent_id' => 'required|integer|exists:ai_agents,id',
+                ]
+
+            );
+            if ($validator->fails()) {
+                $messages = $validator->errors()->all();
+                foreach ($messages as $message) {
+                    return response()->json(
+                        [
+                            "error" => true,
+                            "message" => $message,
+                        ],
+                        400
+                    );
+                }
+            }
+
+            $aiAgent = AiAgentsModel::where('id', $request->agent_id)->first();
+
+            if (!$aiAgent) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'AI Agent not found or you do not have permission to use it',
+                ], 404);
+            }
+
+            $newAiAgent = $aiAgent->replicate();
+            $newAiAgent->user_id = Auth::id(); // Assign to current user
+            $newAiAgent->name = $aiAgent->name . ' (Copy)';
+            $newAiAgent->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'AI Agent used successfully',
+                'data' => $newAiAgent,
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Error duplicating AI Agent: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to duplicate AI Agent: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+    public function build(Request $request)
+    {
+        try {
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'agent_id' => 'required|integer|exists:ai_agents,id',
+                    'action' => 'required|string',
+                ]
+
+            );
+            if ($validator->fails()) {
+                $messages = $validator->errors()->all();
+                foreach ($messages as $message) {
+                    return response()->json(
+                        [
+                            "error" => true,
+                            "message" => $message,
+                        ],
+                        400
+                    );
+                }
+            }
+
+            $aiAgent = AiAgentsModel::where('id', $request->agent_id)->where('user_id', Auth::id())->first();
+
+            if (!$aiAgent) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'AI Agent not found.',
+                ], 404);
+            }
+            $active = $request->active === true ? true : false;
+            $newAction = new AgentActionsModel();
+            $newAction->user_id = Auth::id(); // Assign to current user
+            $newAction->agent_id = $aiAgent->id;
+            $newAction->active = $active;
+            $newAction->action_data = json_encode($request->action_data);
+            $newAction->action_type = $request->action;
+            $newAction->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Action added successfully',
+                'data' => $newAction,
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Error adding AI Agent action: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to add AI Agent action: ' . $e->getMessage(),
             ], 500);
         }
     }

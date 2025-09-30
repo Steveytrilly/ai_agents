@@ -18,9 +18,10 @@ class UserSeeder extends Seeder
             'name' => 'Admin User',
             'email' => 'onyebuchiprincee@gmail.com',
             'password' => Hash::make('12345678'), // always hash!
+            'user_type' => 'admin',
         ]);
 
-        // You can add more users here
-        User::factory()->count(2)->create(); // generates 5 random users
+        // // You can add more users here
+        // User::factory()->count(2)->create(); // generates 5 random users
     }
 }

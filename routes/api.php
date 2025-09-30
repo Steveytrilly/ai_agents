@@ -28,5 +28,9 @@ Route::prefix('v1')->group(function () {
             ->name('ai_agents.duplicate');
         Route::post('delete/ai-agent', [AiAgentsController::class, 'delete'])
             ->name('ai_agents.delete');
+        Route::post('use/ai-agent', [AiAgentsController::class, 'useAgent'])
+            ->name('ai_agents.use');
+        Route::post('build/ai-agent', [AiAgentsController::class, 'build'])
+            ->name('ai_agents.build');
     });
 });
