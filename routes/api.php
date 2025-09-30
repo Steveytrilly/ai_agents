@@ -32,5 +32,9 @@ Route::prefix('v1')->group(function () {
             ->name('ai_agents.use');
         Route::post('build/ai-agent', [AiAgentsController::class, 'build'])
             ->name('ai_agents.build');
+        Route::post('ai-agent/action/edit', [AiAgentsController::class, 'editAction'])
+            ->name('ai_agents.edit_action');
+        Route::get('ai-agent/{id}', [AiAgentsController::class, 'agentDetails'])
+            ->name('ai_agent.details');
     });
 });

@@ -306,7 +306,6 @@ class AiAgentsController extends Controller
                 $request->all(),
                 [
                     'agent_id' => 'required|integer|exists:ai_agents,id',
-                    'action' => 'required|string',
                 ]
 
             );
@@ -353,4 +352,79 @@ class AiAgentsController extends Controller
             ], 500);
         }
     }
+    public function editAction(Request $request)
+    {
+        try {
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'action_id' => 'required|integer|exists:agent_actions,id',
+                    'action_data' => 'required',
+                ]
+
+            );
+            if ($validator->fails()) {
+                $messages = $validator->errors()->all();
+                foreach ($messages as $message) {
+                    return response()->json(
+                        [
+                            "error" => true,
+                            "message" => $message,
+                        ],
+                        400
+                    );
+                }
+            }
+
+            $action = AgentActionsModel::where('id', $request->action_id)->where('user_id', Auth::id())->first();
+
+            if (!$action) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'AI Agent action not found.',
+                ], 404);
+            }
+            $active = $request->active === true ? true : false;
+            $action->active = $active;
+            $action->action_data = json_encode($request->action_data);
+            $action->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Action updated successfully',
+                'data' => $action,
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Error updating AI Agent action: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update AI Agent action: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+    public function agentDetails($agentId)
+    {
+        try {
+            $aiAgent = AiAgentsModel::where('id', $agentId)->where('user_id', Auth::id())->first();
+
+            if (!$aiAgent) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'AI Agent not found.',
+                ], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => $aiAgent,
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Error fetching AI Agent details: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch AI Agent details: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
 }
