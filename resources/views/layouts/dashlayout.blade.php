@@ -21,12 +21,7 @@
         </div>
 
 
-<script>
-  window.routes = {
-    agent: "{{ route('agent') }}",
-    dashboard:  "{{ route('dashboard') }}"
-  }
-</script>
+
 
 @endsection
 

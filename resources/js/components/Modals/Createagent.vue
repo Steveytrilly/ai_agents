@@ -41,7 +41,7 @@
                     >
                     <textarea
                         v-model="agents.description"
-                        class="w-full mt-2 resize-none h-[110px] border border-[#2F2F30] rounded-[14px] bg-transparent focus:border-[#2F2F30] focus:outline-none focus:ring-0"
+                        class="w-full mt-2 resize-none h-[110px] border border-[#2F2F30] rounded-[14px] bg-transparent"
                     ></textarea>
                 </div>
 
@@ -112,25 +112,10 @@ const agents = ref({
 });
 
 const props = defineProps({
-    agent: {
-        type: Object,
+    refreshAgents: {
+        type: [Function],
     },
 });
-
-// const create = async () => {
-//     const formData = new FormData();
-//     formData.append("name", agents.value.name);
-//     formData.append("description", agents.value.description);
-//     // formData.append("category_id", agents.value.category);
-//     if (fileInput.value) formData.append("agent_image", fileInput.value);
-//     const res = await api.createAgent(formData);
-//     if (res) {
-//         console.log("Created agent:", res);
-//         close_modal("create");
-//     } else {
-//         console.error("Failed to create agent");
-//     }
-// };
 
 const create = async () => {
     const formData = new FormData();
@@ -140,11 +125,16 @@ const create = async () => {
 
     const res = await api.createAgent(formData);
     if (res && res.data) {
-        props.agent();
+        props.refreshAgents();
         console.log("Created agent:", res);
         // set backend image URL
         backendImage.value = res.data.agent_image.replace(/^"|"$/g, "");
         close_modal("create");
+
+        agents.value.name = "";
+        agents.value.description = "";
+        agents.value.image = "";
+        fileInput.value = null;
     } else {
         console.error("Failed to create agent");
     }
@@ -166,11 +156,11 @@ function handleFileUpload(event) {
     }
 }
 
-// function removeImage() {
-//     previewImage.value = "";
-//     fileName.value = "";
-//     agents.value.image = "";
-// }
+function removeImage() {
+    previewImage.value = "";
+    fileName.value = "";
+    agents.value.image = "";
+}
 </script>
 
 <style scoped>

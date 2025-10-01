@@ -1,11 +1,11 @@
 <template>
-    <div class="px-3 font-bold text-[30px] mt-8">
-        <span class="flex items-center justify-between">
+    <div class="font-bold text-[30px] mt-8">
+        <span class="flex items-center justify-between px-3">
             <h1>AI AGENT</h1>
             <Btn title="Create AI Agent" @click="showModal('create')"></Btn>
         </span>
 
-        <div class="flex items-center gap-8 border-b border-gray-700 mt-5">
+        <div class="flex items-center gap-8 border-b border-gray-700 mt-5 px-3">
             <!-- Tab 1 -->
             <button
                 @click="showActive = 'dfy'"

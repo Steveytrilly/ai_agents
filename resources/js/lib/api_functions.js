@@ -16,9 +16,9 @@ async function createAgent(x) {
         .catch((e) => handleError(e));
 }
 
-async function listAgents() {
+async function listAgents(params = {}) {
     return await ax
-        .get("/ai-agents")
+        .get("/ai-agents", { params })
         .then((res) => res.data)
         .catch((e) => handleError(e));
 }
@@ -46,12 +46,12 @@ async function editAgents(form) {
         .catch((e) => handleError(e));
 }
 
-// async function useAgents(id) {
-//     return await ax
-//         .post("/use/ai-agent", { agent_id: id })
-//         .then((res) => res.data)
-//         .catch((e) => handleError(e));
-// }
+async function useAgents(id) {
+    return await ax
+        .post("/use/ai-agent", { agent_id: id })
+        .then((res) => res.data)
+        .catch((e) => handleError(e));
+}
 
 export default {
     createAgent,
@@ -59,4 +59,5 @@ export default {
     deleteAgents,
     duplicateAgents,
     editAgents,
+    useAgents,
 };

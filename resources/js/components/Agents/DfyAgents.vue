@@ -1,6 +1,6 @@
 <template>
     <div class="mt-5">
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-4 px-3">
             <div class="w-[180px] relative">
                 <button
                     @click.stop="toggleDropdown('dropdown')"
@@ -45,7 +45,7 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-4 gap-5 mt-7">
+        <div class="grid grid-cols-4 items-start gap-5 mt-7 flow px-3">
             <div
                 class="bg-[#202123] p-4 rounded-[16px] relative"
                 v-for="agents in filteredList"
@@ -115,7 +115,11 @@
                 </p>
 
                 <div class="flex flex-col items-center mt-3 w-full">
-                    <Btn title="Use Agent" class="!w-full"></Btn>
+                    <Btn
+                        title="Use Agent"
+                        class="!w-full"
+                        @click="useAgent(agents.id)"
+                    ></Btn>
                 </div>
 
                 <div
@@ -159,7 +163,7 @@
         </div>
     </div>
 
-    <Createagent :agent="agentsList"></Createagent>
+    <Createagent :refreshAgents="agentsList"></Createagent>
 </template>
 
 <script setup>
@@ -190,12 +194,14 @@ function handleClickOutside(e) {
 
 const agentsList = async () => {
     try {
-        const res = await api.listAgents();
+        const res = await api.listAgents({ dfy: 1 });
         if (res && res.data) {
-            list.value = res.data.map((agent) => ({
-                ...agent,
-                agent_image: cleanUrl(agent.agent_image),
-            }));
+            list.value = res.data
+                // .filter((agent) => agent.agent_type === "dfy")
+                .map((agent) => ({
+                    ...agent,
+                    agent_image: cleanUrl(agent.agent_image),
+                }));
         }
     } catch (err) {
         console.log(err);
@@ -216,9 +222,14 @@ const duplicateAgent = async (id) => {
     }
 };
 
-// Computed property: filters list whenever searchQuery changes
+const useAgent = async (id) => {
+    const res = await api.useAgents(id);
+    if (res) {
+    }
+};
+
 const filteredList = computed(() => {
-    if (!searchQuery.value) return list.value; // if empty search, show all
+    if (!searchQuery.value) return list.value;
 
     return list.value.filter(
         (agent) =>
@@ -242,6 +253,11 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+.flow {
+    height: calc(100vh - 340px);
+    overflow-y: scroll;
+}
+
 .backdrop {
     position: fixed;
     top: 0;
