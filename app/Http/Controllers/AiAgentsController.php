@@ -16,10 +16,11 @@ class AiAgentsController extends Controller
         try {
             $request->dfy = $request->dfy == 1 ? true : false;
             if($request->dfy){
-                $aiAgents = AiAgentsModel::get();
-                $aiAgents = $aiAgents->filter(function ($agent) {
-                    return $agent->agent_type === 'dfy';
-                });
+                $aiAgents = AiAgentsModel::where('agent_type', 'dfy')->get();
+                return response()->json([
+                    'success' => true,
+                    'data' => $aiAgents,
+                ], 200);
             }
             $aiAgents = AiAgentsModel::where('user_id', Auth::id())->get();
 
@@ -67,6 +68,8 @@ class AiAgentsController extends Controller
             $aiAgent->description = $request->description;
             $aiAgent->category_id = Auth::id(); // assuming user is authenticated
             $aiAgent->run_id = Str::uuid();
+            $aiAgent->agent_uuid = Str::uuid();
+            $aiAgent->agent_type = Auth::user()->user_type == 'admin' ? 'dfy' : 'personal';
             $aiAgent->agent_image = $image['file']; // default image
             $aiAgent->save();
 
@@ -423,6 +426,53 @@ class AiAgentsController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to fetch AI Agent details: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+    public function deleteAction(Request $request)
+    {
+        try {
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'action_id' => 'required|integer|exists:agent_actions,id',
+                ]
+            );
+            if ($validator->fails()) {
+                $messages = $validator->errors()->all();
+                foreach ($messages as $message) {
+                    return response()->json(
+                        [
+                            "error" => true,
+                            "message" => $message,
+                        ],
+                        400
+                    );
+                }
+            }
+
+            $action = AgentActionsModel::where('id', $request->action_id)
+                ->where('user_id', Auth::id())
+                ->first();
+
+            if (!$action) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'AI Agent action not found or you do not have permission to delete it',
+                ], 404);
+            }
+
+            $action->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'AI Agent action deleted successfully',
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Error deleting AI Agent action: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete AI Agent action: ' . $e->getMessage(),
             ], 500);
         }
     }
