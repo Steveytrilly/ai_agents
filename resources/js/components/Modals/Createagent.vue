@@ -121,7 +121,7 @@ const create = async () => {
     const formData = new FormData();
     formData.append("name", agents.value.name);
     formData.append("description", agents.value.description);
-    if (fileInput.value) formData.append("agent_image", fileInput.value);
+    if (fileInput.value) formData.append("image", fileInput.value);
 
     const res = await api.createAgent(formData);
     if (res && res.data) {
