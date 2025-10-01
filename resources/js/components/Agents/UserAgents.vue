@@ -190,7 +190,7 @@ function handleClickOutside(e) {
 
 const agentsList = async () => {
     try {
-        const res = await api.listAgents({ personal: 1 });
+        const res = await api.listAgents();
         if (res && res.data) {
             list.value = res.data
                 // .filter(
