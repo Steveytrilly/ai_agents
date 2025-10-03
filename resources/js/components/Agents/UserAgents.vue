@@ -92,6 +92,7 @@
 
                     <li
                         class="flex items-center gap-2 hover:bg-[#38334F] p-2 rounded-md cursor-pointer"
+                        @click="buildAgent(agents.id)"
                     >
                         <img src="/assets/icons/recall.svg" />
                         <p class="text-[14px] text-[#24B26B]">Build</p>
@@ -236,6 +237,10 @@ const filteredList = computed(() => {
                 .includes(searchQuery.value.toLowerCase())
     );
 });
+
+function buildAgent(agentId) {
+    window.location.href = `/dashboard/agents/builder/${agentId}`;
+}
 
 onMounted(() => {
     agentsList();

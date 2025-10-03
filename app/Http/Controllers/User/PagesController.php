@@ -39,9 +39,10 @@ class PagesController extends Controller
         return view($this->template . '.dashboard.Agents.agent', $data);
     }
 
-     public function builder()
+     public function builder($agentId)
     {
         $data['title'] = 'Builder';
+        $data['agentId'] = $agentId;  
         return view($this->template . '.dashboard.Agents.builder', $data);
     }
     

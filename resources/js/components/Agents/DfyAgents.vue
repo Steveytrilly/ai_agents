@@ -92,6 +92,7 @@
 
                     <li
                         class="flex items-center gap-2 hover:bg-[#38334F] p-2 rounded-md cursor-pointer"
+                        @click="buildAgent(agents.id)"
                     >
                         <img src="/assets/icons/recall.svg" />
                         <p class="text-[14px] text-[#24B26B]">Build</p>
@@ -174,6 +175,8 @@ import { ref, onMounted, onBeforeUnmount, computed } from "vue";
 import { showModal, close_modal } from "../../utils/utils";
 import Editagent from "../Modals/Editagent.vue";
 import Createagent from "../Modals/Createagent.vue";
+import { useActionsStore } from "../../stores/action";
+const actionsStore = useActionsStore();
 
 const cleanUrl = (url) =>
     url ? url.replace(/^"|"$/g, "").replace(/\\/g, "") : "";
@@ -241,6 +244,11 @@ const filteredList = computed(() => {
                 .includes(searchQuery.value.toLowerCase())
     );
 });
+
+function buildAgent(agentId) {
+    actionsStore.setAgentId(agentId);
+    window.location.href = `/dashboard/agents/builder/${agentId}`;
+}
 
 onMounted(() => {
     agentsList();

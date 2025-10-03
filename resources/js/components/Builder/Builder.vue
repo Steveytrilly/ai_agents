@@ -149,4 +149,15 @@
 import Btn from "../Atoms/Button.vue";
 import Actions from "../Modals/Actions/Actions.vue";
 import { showModal } from "../../utils/utils";
+import { useActionsStore } from "../../stores/action";
+import { onMounted } from "vue";
+
+const actionsStore = useActionsStore();
+
+onMounted(() => {
+    // Get the agent_id from the URL
+    const parts = window.location.pathname.split("/");
+    const agentId = parts[parts.length - 1]; // last segment
+    actionsStore.setAgentId(agentId);
+});
 </script>
