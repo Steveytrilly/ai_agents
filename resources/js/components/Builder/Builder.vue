@@ -42,39 +42,25 @@
                 </span>
 
                 <div class="p-4">
-                    <div class="flex items-center gap-6">
-                        <span class="flex items-center gap-1">
-                            <img src="/assets/icons/count.svg" alt="" />
-                            <p class="text-white text-[14px] font-normal">1</p>
-                        </span>
+                    <div
+                        class="flex items-center justify-between gap-6"
+                        v-for="(summary, index) in actionsStore.actionSummaries"
+                        :key="index"
+                    >
+                        <div class="flex items-center">
+                            <span class="flex items-center gap-1">
+                                <img src="/assets/icons/count.svg" alt="" />
+                                <p class="text-white text-[14px] font-normal">
+                                    {{ index + 1 }}
+                                </p>
+                            </span>
 
-                        <span class="space-y-1">
-                            <h3
-                                class="text-[rgba(255,255,255,0.90)] font-semibold"
-                            >
-                                Get User Input
-                            </h3>
-
-                            <p
-                                class="text-[rgba(255,255,255,0.75)] text-[14px] font-normal leading-[28px]"
-                            >
-                                Get user input type
-                                <span
-                                    class="bg-[rgba(112,92,246,0.25)] p-1 rounded-[4px]"
-                                    >text</span
-                                >
-                                with prompt
-                                <span
-                                    class="bg-[rgba(112,92,246,0.25)] p-1 rounded-[4px]"
-                                    >What is the name of your business?</span
-                                >
-                                and save to
-                                <span
-                                    class="bg-[rgba(112,92,246,0.25)] p-1 rounded-[4px]"
-                                    >business_name</span
-                                >
-                            </p>
-                        </span>
+                            <span class="space-y-1">
+                                <div class="p-2 text-white">
+                                    {{ summary }}
+                                </div>
+                            </span>
+                        </div>
 
                         <div class="flex items-center gap-3">
                             <img src="/assets/icons/toggle.svg" />
@@ -87,6 +73,7 @@
 
                             <button
                                 class="bg-[rgba(244,244,245,0.25)] rounded-[4px] p-2"
+                                @click="actionsStore.deleteAction(index)"
                             >
                                 <img src="/assets/icons/delete2.svg" alt="" />
                             </button>
@@ -94,6 +81,14 @@
                     </div>
                 </div>
             </div>
+
+            <!-- <div
+                v-for="(summary, index) in actionsStore.actionSummaries"
+                :key="index"
+                class="p-2 text-white"
+            >
+                {{ summary }}
+            </div> -->
         </div>
 
         <!-- Right side -->
@@ -123,7 +118,54 @@
                     </span>
                 </div>
 
-                <div class="mt-3">
+                <div class="space-y-6 mt-4 flow">
+                    <div
+                        v-for="(action, index) in actionsStore.actionsState
+                            .action_data"
+                        :key="index"
+                        class="p-4 rounded-md"
+                    >
+                        <p class="text-[14px] font-normal text-[#718096]">
+                            {{ index + 1 }} {{ action.user_prompt }}
+                        </p>
+
+                        <!-- Conditionally render the right input -->
+                        <input
+                            v-if="action.input_type === 'text'"
+                            type="text"
+                            class="w-full p-3 rounded-[3px] border border-[#2F2F30] bg-transparent mt-2 focus:border-[#2F2F30] focus:outline-none focus:ring-0"
+                            v-model="action.default_value"
+                        />
+
+                        <textarea
+                            v-else-if="action.input_type === 'textarea'"
+                            rows="4"
+                            class="w-full p-3 rounded-[3px] border border-[#2F2F30] bg-transparent mt-2 focus:border-[#2F2F30] focus:outline-none focus:ring-0"
+                            v-model="action.default_value"
+                        ></textarea>
+
+                        <input
+                            v-else-if="action.input_type === 'number'"
+                            type="number"
+                            class="w-full p-3 rounded-[3px] border border-[#2F2F30] bg-transparent mt-2 focus:border-[#2F2F30] focus:outline-none focus:ring-0"
+                            v-model="action.default_value"
+                        />
+
+                        <input
+                            v-else-if="action.input_type === 'url'"
+                            type="url"
+                            class="w-full p-3 rounded-[3px] border border-[#2F2F30] bg-transparent mt-2 focus:border-[#2F2F30] focus:outline-none focus:ring-0"
+                            v-model="action.default_value"
+                        />
+
+                        <!-- Optional: fallback -->
+                        <p v-else class="text-gray-500 text-sm mt-2">
+                            Unsupported input type
+                        </p>
+                    </div>
+                </div>
+
+                <!-- <div class="mt-3">
                     <p
                         class="text-[12px] font-normal text-[#718096] capitalize italic"
                     >
@@ -137,27 +179,62 @@
                         type="text"
                         class="w-full border border-[#2F2F30] focus:border-[#2F2F30] p-3 rounded-[3px] bg-transparent mt-2 focus:outline-none focus:ring-0"
                     />
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
 
-    <Actions></Actions>
+    <Actions @new-action="actionsStore.addActionSummary"></Actions>
 </template>
 
 <script setup>
 import Btn from "../Atoms/Button.vue";
 import Actions from "../Modals/Actions/Actions.vue";
 import { showModal } from "../../utils/utils";
+import { ref, watch, onMounted } from "vue";
 import { useActionsStore } from "../../stores/action";
-import { onMounted } from "vue";
+import api from "../../lib/axios_global";
 
 const actionsStore = useActionsStore();
 
-onMounted(() => {
-    // Get the agent_id from the URL
+const formValues = ref({});
+
+onMounted(async () => {
     const parts = window.location.pathname.split("/");
-    const agentId = parts[parts.length - 1]; // last segment
+    const agentId = Number(parts[parts.length - 1]);
     actionsStore.setAgentId(agentId);
+
+    try {
+        const res = await api.get(`/ai-agent/${agentId}`);
+        const agentData = res.data.data;
+
+        if (agentData.actions && agentData.actions.length) {
+            // Parse the stringified action_data
+            const parsedActions = agentData.actions
+                .map((a) => JSON.parse(a.action_data))
+                .flat();
+
+            actionsStore.actionsState.action_data = parsedActions;
+
+            // Rebuild summaries
+            actionsStore.actionSummaries = parsedActions.map((a) =>
+                actionsStore.generateSummary(a)
+            );
+
+            console.log(
+                "Store hydrated from backend:",
+                actionsStore.actionsState
+            );
+        }
+    } catch (err) {
+        console.error("Error fetching actions:", err);
+    }
 });
 </script>
+
+<style scoped>
+.flow {
+    height: calc(100vh - 300px);
+    overflow-y: scroll;
+}
+</style>

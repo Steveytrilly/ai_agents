@@ -55,7 +55,7 @@
                         v-if="showActive === 'input' && !selectedForm"
                     >
                         <li
-                            @click="openForm('get-user-input')"
+                            @click="openForm('get_user_input')"
                             class="hover:bg-[#2F2F30] cursor-pointer p-3 rounded-[4px] flex items-center gap-3 border border-[#2F2F30]"
                         >
                             <img src="/assets/icons/input.svg" />
@@ -73,7 +73,7 @@
                         </li>
 
                         <li
-                            @click="openForm('get-user-list')"
+                            @click="openForm('mad-cow')"
                             class="hover:bg-[#2F2F30] cursor-pointer p-3 rounded-[4px] flex items-center gap-3 border border-[#2F2F30]"
                         >
                             <img src="/assets/icons/input.svg" />
@@ -235,6 +235,16 @@
         </div>
     </div>
 
+    <!-- <Inputs
+        v-if="selectedForm"
+        :form-type="selectedForm"
+        @back="
+            () => {
+                selectedForm = null;
+                showModal('action');
+            }
+        "
+    /> -->
     <Inputs
         v-if="selectedForm"
         :form-type="selectedForm"
@@ -242,6 +252,13 @@
             () => {
                 selectedForm = null;
                 showModal('action');
+            }
+        "
+        @new-action="
+            (action) => {
+                selectedForm = null;
+                showModal('action');
+                $emit('new-action', action);
             }
         "
     />
@@ -262,6 +279,7 @@ const showActive = ref("");
 import { ref } from "vue";
 import Inputs from "./Inputs.vue";
 import { close_modal, showModal } from "../../../utils/utils";
+const emit = defineEmits(["new-action"]);
 
 const showActive = ref(null); // 'input' | 'dfy' | etc
 const selectedForm = ref(null); // 'get-user-input' | 'get-user-list' | etc
@@ -273,7 +291,7 @@ function openCategory(category) {
 
 function openForm(formKey) {
     selectedForm.value = formKey;
-    close_modal(["action"]);
+    // close_modal(["action"]);
 }
 </script>
 

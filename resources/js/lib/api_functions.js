@@ -53,6 +53,13 @@ async function useAgents(id) {
         .catch((e) => handleError(e));
 }
 
+async function getAgents() {
+    return await ax
+        .get("/ai-agent/1")
+        .then((res) => res.data)
+        .catch((e) => handleError(e));
+}
+
 export default {
     createAgent,
     listAgents,
@@ -60,4 +67,5 @@ export default {
     duplicateAgents,
     editAgents,
     useAgents,
+    getAgents,
 };
