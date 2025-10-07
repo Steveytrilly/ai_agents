@@ -355,14 +355,16 @@ class AiAgentsController extends Controller
                     ->toArray();
 
                 // Merge unique only
-                $mergedData = array_merge($currentData, $newData);
-
-                $existingAction->action_data = json_encode($mergedData);
+                if (!empty($newData)) {
+                    $existingAction->action_data = json_encode(array_values($newData));
+                } else {
+                    $existingAction->action_data = json_encode([]);
+                }
                 $existingAction->active = $active;
                 $existingAction->save();
 
                 $action = $existingAction;
-                $action->action_data = $mergedData; // return as array, not string
+                $action->action_data = json_decode($action->action_data, true); // return as array, not string
             } else {
                 // Create new
                 $newAction = new AgentActionsModel();
