@@ -305,94 +305,77 @@ class AiAgentsController extends Controller
             ], 500);
         }
     }
-    public function build(Request $request)
-    {
-        try {
-            $validator = Validator::make(
-                $request->all(),
-                [
-                    'agent_id' => 'required|integer|exists:ai_agents,id',
-                    'action_data' => 'array',
-                ]
-            );
-
-            if ($validator->fails()) {
-                return response()->json([
-                    "error" => true,
-                    "message" => $validator->errors()->first(),
-                ], 400);
-            }
-
-            $aiAgent = AiAgentsModel::where('id', $request->agent_id)
-                ->where('user_id', Auth::id())
-                ->first();
-
-            if (!$aiAgent) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'AI Agent not found.',
-                ], 404);
-            }
-
-            $active = $request->boolean('active', false);
-            $action = null;
-            // 🔑 Check if action already exists for this agent
-            $existingAction = AgentActionsModel::where('agent_id', $aiAgent->id)
-                ->where('user_id', Auth::id())
-                ->first();
-
-            if ($existingAction) {
-                $currentData = json_decode($existingAction->action_data, true) ?? [];
-
-                // Prevent duplicates by comparing arrays
-                $newData = collect($request->action_data)
-                    ->filter(function ($item) use ($currentData) {
-                        return !collect($currentData)->contains(function ($existing) use ($item) {
-                            return $existing == $item; // check if exact match
-                        });
-                    })
-                    ->values()
-                    ->toArray();
-
-                // Merge unique only
-                if (!empty($newData)) {
-                    $existingAction->action_data = json_encode(array_values($newData));
-                } else {
-                    $existingAction->action_data = json_encode([]);
-                }
-                $existingAction->active = $active;
-                $existingAction->save();
-
-                $action = $existingAction;
-                $action->action_data = json_decode($action->action_data, true); // return as array, not string
-            } else {
-                // Create new
-                $newAction = new AgentActionsModel();
-                $newAction->user_id = Auth::id();
-                $newAction->agent_id = $aiAgent->id;
-                $newAction->active = $active;
-                $newAction->action_data = json_encode($request->action_data);
-                $newAction->action_type = $request->action ?? 'default';
-                $newAction->save();
-
-                $action = $newAction;
-                $action->action_data = $request->action_data; // return as array
-            }
-
+public function build(Request $request)
+{
+    try {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'agent_id' => 'required|integer|exists:ai_agents,id',
+                'action_data' => 'array',
+            ]
+        );
+ 
+        if ($validator->fails()) {
             return response()->json([
-                'success' => true,
-                'message' => 'Action saved successfully',
-                'data' => $action,
-            ], 200);
-
-        } catch (\Exception $e) {
-            Log::error('Error adding AI Agent action: ' . $e->getMessage());
+                "error" => true,
+                "message" => $validator->errors()->first(),
+            ], 400);
+        }
+ 
+        $aiAgent = AiAgentsModel::where('id', $request->agent_id)
+            ->where('user_id', Auth::id())
+            ->first();
+ 
+        if (!$aiAgent) {
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to save AI Agent action: ' . $e->getMessage(),
-            ], 500);
+                'message' => 'AI Agent not found.',
+            ], 404);
         }
+ 
+        $active = $request->boolean('active', false);
+ 
+        $existingAction = AgentActionsModel::where('agent_id', $aiAgent->id)
+            ->where('user_id', Auth::id())
+            ->first();
+ 
+        if ($existingAction) {
+            // ✅ Replace the entire array with what frontend sends
+            $existingAction->action_data = json_encode($request->action_data);
+            $existingAction->active = $active;
+            $existingAction->save();
+ 
+            $action = $existingAction;
+            $action->action_data = $request->action_data; // return decoded
+        } else {
+            // Create new
+            $newAction = new AgentActionsModel();
+            $newAction->user_id = Auth::id();
+            $newAction->agent_id = $aiAgent->id;
+            $newAction->active = $active;
+            $newAction->action_data = json_encode($request->action_data);
+            $newAction->action_type = $request->action ?? 'default';
+            $newAction->save();
+ 
+            $action = $newAction;
+            $action->action_data = $request->action_data;
+        }
+ 
+        return response()->json([
+            'success' => true,
+            'message' => 'Action saved successfully',
+            'data' => $action,
+        ], 200);
+ 
+    } catch (\Exception $e) {
+        Log::error('Error adding AI Agent action: ' . $e->getMessage());
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to save AI Agent action: ' . $e->getMessage(),
+        ], 500);
     }
+}
 
 
     public function editAction(Request $request)
