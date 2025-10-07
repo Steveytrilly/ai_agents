@@ -312,7 +312,7 @@ class AiAgentsController extends Controller
                 $request->all(),
                 [
                     'agent_id' => 'required|integer|exists:ai_agents,id',
-                    'action_data' => 'required|array',
+                    'action_data' => 'array',
                 ]
             );
 
@@ -335,7 +335,7 @@ class AiAgentsController extends Controller
             }
 
             $active = $request->boolean('active', false);
-
+            $action = null;
             // 🔑 Check if action already exists for this agent
             $existingAction = AgentActionsModel::where('agent_id', $aiAgent->id)
                 ->where('user_id', Auth::id())
