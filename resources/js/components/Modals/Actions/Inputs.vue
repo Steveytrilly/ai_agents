@@ -30,8 +30,21 @@
                             <option value="text">Text</option>
                             <option value="number">Number</option>
                             <option value="yes_no">Yes/No</option>
+                            <option value="textarea">Textarea</option>
                             <option value="url">URL</option>
                             <option value="website">Website</option>
+                            <option value="dropdown_single">
+                                Dropdown (Single)
+                            </option>
+                            <option value="dropdown_multiple">
+                                Dropdown (Multiple)
+                            </option>
+                            <option value="multi_select">
+                                Multi-Item Selector
+                            </option>
+                            <option value="multi_select-table">
+                                Multi-Item Selector (Table view)
+                            </option>
                         </select>
                     </div>
 
@@ -41,11 +54,62 @@
                         >
                         <textarea
                             v-model="form.user_prompt"
+                            required
                             class="w-full mt-2 resize-none h-[110px] border border-[#2F2F30] rounded-[14px] bg-transparent focus:border-[#2F2F30] focus:outline-none focus:ring-0"
                         ></textarea>
                     </div>
 
-                    <div>
+                    <div v-if="isDropdownType">
+                        <label class="text-[15px] font-meduim"
+                            >Select Options * (enter each options on a new
+                            line)</label
+                        >
+                        <textarea
+                            v-model="form.options"
+                            class="w-full mt-2 resize-none h-[110px] border border-[#2F2F30] rounded-[14px] bg-transparent focus:border-[#2F2F30] focus:outline-none focus:ring-0"
+                        ></textarea>
+                    </div>
+
+                    <!-- Validation Warning -->
+                    <p
+                        v-if="form.default_value && !validDefaultOption"
+                        class="text-[#FF6B6B] text-sm mt-1"
+                    >
+                        ⚠️ Default value must match one of the options listed
+                        above.
+                    </p>
+
+                    <!-- YES/NO DEFAULT VALUE -->
+                    <div v-if="form.input_type === 'yes_no'">
+                        <label class="text-[15px] font-meduim"
+                            >Default Value</label
+                        >
+                        <select
+                            v-model="form.default_value"
+                            class="text-[#9E9E9E] text-[15px] mt-2 font-normal rounded-[14px] p-3 border border-[#2F2F30] focus:border-[#2F2F30] bg-transparent block w-full focus:outline-none focus:ring-0"
+                        >
+                            <option value="disabled">
+                                Choose default value
+                            </option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+
+                    <!-- URL DEFAULT VALUE -->
+                    <div v-if="form.input_type === 'url'">
+                        <label class="text-[15px] font-meduim"
+                            >Default Value</label
+                        >
+                        <input
+                            v-model="form.default_value"
+                            placeholder="enter a url"
+                            type="url"
+                            class="w-full border placeholder:text-[#9E9E9E] border-[#2F2F30] focus:border-[#2F2F30] p-3 rounded-[14px] bg-transparent mt-2 focus:outline-none focus:ring-0"
+                        />
+                    </div>
+
+                    <div v-else>
                         <label class="text-[15px] font-meduim"
                             >Default Value</label
                         >
@@ -97,52 +161,32 @@
                 </form>
             </div>
 
-            <div v-if="formType === 'mad-cow'">
+            <div v-if="formType === 'get_list'">
                 <span class="flex items-center gap-3">
                     <img src="/assets/icons/input.svg" />
-                    <h2 class="text-xl font-semibold mb-2">Get User Input</h2>
+                    <h2 class="text-xl font-semibold mb-2">Get List</h2>
                 </span>
 
                 <form class="mt-10 space-y-6 flow" @submit.prevent="saveAction">
                     <div>
-                        <label class="text-[15px] font-meduim block"
-                            >Input Type *</label
-                        >
-                        <select
-                            v-model="form.input_type"
-                            class="text-[#9E9E9E] text-[15px] mt-2 font-normal rounded-[14px] p-3 border border-[#2F2F30] focus:border-[#2F2F30] bg-transparent block w-full focus:outline-none focus:ring-0"
-                            required
-                        >
-                            <option value="disabled">
-                                Choose a Input type
-                            </option>
-                            <option value="text">Text</option>
-                            <option value="number">Number</option>
-                            <option value="yes_no">Yes/No</option>
-                            <option value="url">URL</option>
-                            <option value="website">Website</option>
-                        </select>
-                    </div>
-
-                    <div>
                         <label class="text-[15px] font-meduim"
                             >User Prompt</label
                         >
-                        <textarea
+                        <input
                             v-model="form.user_prompt"
-                            class="w-full mt-2 resize-none h-[110px] border border-[#2F2F30] rounded-[14px] bg-transparent focus:border-[#2F2F30] focus:outline-none focus:ring-0"
-                        ></textarea>
+                            type="text"
+                            class="w-full border border-[#2F2F30] focus:border-[#2F2F30] p-3 rounded-[14px] bg-transparent mt-2 focus:outline-none focus:ring-0"
+                        />
                     </div>
 
                     <div>
                         <label class="text-[15px] font-meduim"
-                            >Default Value</label
+                            >List Delimiter (Leave Blank for New Line)</label
                         >
-                        <input
-                            v-model="form.default_value"
-                            type="text"
-                            class="w-full border border-[#2F2F30] focus:border-[#2F2F30] p-3 rounded-[14px] bg-transparent mt-2 focus:outline-none focus:ring-0"
-                        />
+                        <textarea
+                            v-model="form.list_delimeter"
+                            class="w-full mt-2 resize-none h-[110px] border border-[#2F2F30] rounded-[14px] bg-transparent focus:border-[#2F2F30] focus:outline-none focus:ring-0"
+                        ></textarea>
                     </div>
 
                     <label class="flex items-center gap-2 cursor-pointer">
@@ -173,6 +217,7 @@
                         >
                         <input
                             v-model="form.output_variable"
+                            @input="formatOutputVariable"
                             type="text"
                             placeholder="user_input"
                             required
@@ -190,54 +235,146 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import Btn from "../../Atoms/Button.vue";
 import { useActionsStore } from "../../../stores/action";
+import { dialog } from "../../../utils/dialog";
 
 const props = defineProps({
     formType: { type: String, required: true },
+    editData: { type: Object, default: null }, // new
+    editIndex: { type: Number, default: null }, // index of action being edited
 });
 
-const emit = defineEmits(["back"]);
+const validDefaultOption = computed(() => {
+    // Only validate when dropdown type
+    if (!isDropdownType.value) return true;
+
+    const options = form.value.options
+        ?.split("\n")
+        .map((o) => o.trim())
+        .filter(Boolean);
+
+    // Empty default = fine
+    if (!form.value.default_value) return true;
+
+    // Check if the default exists in the option list
+    return options.includes(form.value.default_value.trim());
+});
+
+function formatOutputVariable() {
+    form.output_variable = form.output_variable
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, "_")
+        .replace(/[^\w_]/g, "");
+}
+
+const emit = defineEmits(["back", "new-action"]);
 
 const actionsStore = useActionsStore();
 
 // Form initialized from store template
-const form = ref(actionsStore.newActionTemplate(props.formType));
+// const form = ref(actionsStore.newActionTemplate(props.formType));
+// const form = ref(actionsStore.newActionTemplate(props.formType));
+const form = ref(
+    props.editData
+        ? { ...props.editData }
+        : actionsStore.newActionTemplate(props.formType)
+);
 
+const allowedDropdownTypes = [
+    "dropdown_single",
+    "dropdown_multiple",
+    "multi_select",
+    "multi_select-table",
+];
+
+const isDropdownType = computed(() =>
+    allowedDropdownTypes.includes(form.value.input_type)
+);
+
+// Watch for editing an existing action
+watch(
+    () => props.editData,
+    (newData) => {
+        if (newData) {
+            form.value = { ...newData };
+        }
+    },
+    { immediate: true }
+);
+
+// Watch for changing form type (new action only)
 watch(
     () => props.formType,
     (newType) => {
-        form.value = actionsStore.newActionTemplate(newType);
+        if (!props.editData) {
+            form.value = actionsStore.newActionTemplate(newType);
+        }
     }
 );
 
-// Optional: dynamic title
-// const formTitle = ref(
-//     props.formType === "get-user-input" ? "Get User Input" : "Get User List"
+// watch(
+//     () => props.formType,
+//     (newType) => {
+//         form.value = actionsStore.newActionTemplate(newType);
+//     }
 // );
 
-// function closeModal() {
-//     // Close modal logic (can call close_modal util)
-// }
-
 async function saveAction() {
-    const actionToAdd = { ...form.value };
+    const actionToSave = { ...form.value };
 
-    // Add to store
-    actionsStore.addAction(actionToAdd);
+    // Add this: check if output_variable is already used
+    if (actionToSave.output_variable) {
+        const formattedVar = actionsStore.formatVariableName(
+            actionToSave.output_variable
+        );
+
+        // Check if variable exists in store
+        const isDuplicate =
+            Object.keys(actionsStore.actionsState.variables).includes(
+                formattedVar
+            ) &&
+            // allow editing same action without triggering duplicate
+            !(
+                props.editIndex !== null &&
+                actionsStore.actionsState.action_data[props.editIndex]
+                    .output_variable === formattedVar
+            );
+
+        if (isDuplicate) {
+            dialog.toastError("Output variable must be unique"); // <-- alert user
+            return; // <-- prevent submission
+        }
+
+        if (isDropdownType.value && !validDefaultOption.value) {
+            // alert("Default value must match one of the options listed.");
+            return;
+        }
+
+        // Format variable before saving
+        actionToSave.output_variable = formattedVar;
+    }
+
+    if (props.editIndex !== null) {
+        // Editing existing action
+        actionsStore.updateAction(props.editIndex, actionToSave);
+    } else {
+        // Adding new action
+        actionsStore.addAction(actionToSave);
+        emit("new-action", actionToSave);
+    }
 
     // Submit to backend
     try {
-        const res = await actionsStore.submitActions();
+        await actionsStore.submitActions();
     } catch (err) {
         console.error("Error submitting actions:", err);
     }
 
-    // Reset form
+    // Reset form & close modal
     form.value = actionsStore.newActionTemplate(props.formType);
-
-    // Close modal
     emit("back");
 }
 </script>

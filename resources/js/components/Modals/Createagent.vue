@@ -130,6 +130,7 @@ const create = async () => {
         // set backend image URL
         backendImage.value = res.data.agent_image.replace(/^"|"$/g, "");
         close_modal("create");
+        dialog.toastSuccess(res.message);
 
         agents.value.name = "";
         agents.value.description = "";

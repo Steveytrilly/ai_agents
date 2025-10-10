@@ -73,7 +73,7 @@
                         </li>
 
                         <li
-                            @click="openForm('mad-cow')"
+                            @click="openForm('get_list')"
                             class="hover:bg-[#2F2F30] cursor-pointer p-3 rounded-[4px] flex items-center gap-3 border border-[#2F2F30]"
                         >
                             <img src="/assets/icons/input.svg" />
@@ -263,17 +263,6 @@
         "
     />
 </template>
-
-<!-- <script setup>
-import Inputs from "./Inputs.vue";
-import { ref } from "vue";
-import { showModal } from "../../../utils/utils";
-
-const showActive = ref("");
-// "actions" = default parent list
-// "input"   = child Inputs.vue
-// "test"    = show Inputs.vue blue div
-</script> -->
 
 <script setup>
 import { ref } from "vue";

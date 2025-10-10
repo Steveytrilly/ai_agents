@@ -10,6 +10,7 @@ import AgentVue from "./components/Agents/Agent.vue";
 import BuilderVue from "./components/Builder/Builder.vue";
 import DashboardVue from "./components/Dashboard.vue";
 import { dialog } from "./utils/dialog";
+import { useNotifyStore } from "./stores/notify";
 
 window.dialog = dialog;
 
@@ -42,5 +43,7 @@ app.use(pinia);
 // });
 
 checkDashboardAuth();
+let notify = useNotifyStore();
+window.notify = notify;
 
 app.mount("#app");

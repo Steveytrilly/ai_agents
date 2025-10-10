@@ -43,11 +43,11 @@
 
                 <div class="p-4">
                     <div
-                        class="flex items-center justify-between gap-6"
+                        class="flex items-center justify-between gap-6 -mt-4 py-4"
                         v-for="(summary, index) in actionsStore.actionSummaries"
                         :key="index"
                     >
-                        <div class="flex items-center">
+                        <div class="flex items-center gap-5">
                             <span class="flex items-center gap-1">
                                 <img src="/assets/icons/count.svg" alt="" />
                                 <p class="text-white text-[14px] font-normal">
@@ -55,11 +55,47 @@
                                 </p>
                             </span>
 
-                            <span class="space-y-1">
-                                <div class="p-2 text-white">
-                                    {{ summary }}
-                                </div>
-                            </span>
+                            <div v-if="summary.type === 'get_user_input'">
+                                <p
+                                    class="text-[13px] font-semibold text-[rgba(255,255,255,0.90)]"
+                                >
+                                    Get User Input
+                                </p>
+
+                                <p
+                                    class="text-[14px] text-[rgba(255,255,255,0.75)]"
+                                >
+                                    Get user input type
+                                    <span
+                                        class="bg-[rgba(112,92,246,0.25)] p-1 rounded-[3px]"
+                                        >{{ summary.input_type }}</span
+                                    >
+                                    with prompt
+                                    <span
+                                        class="bg-[rgba(112,92,246,0.25)] p-1 rounded-[3px]"
+                                        >{{ summary.user_prompt }}</span
+                                    >
+                                    and save to
+                                    <span
+                                        class="bg-[rgba(112,92,246,0.25)] p-1 rounded-[3px]"
+                                        >{{ summary.output_variable }}</span
+                                    >
+                                </p>
+                            </div>
+
+                            <div v-if="summary.type === 'get_list'">
+                                <p
+                                    class="text-[13px] font-semibold text-[rgba(255,255,255,0.90)]"
+                                >
+                                    Get User List
+                                </p>
+
+                                <p
+                                    class="text-[14px] text-[rgba(255,255,255,0.75)]"
+                                >
+                                    Get user List
+                                </p>
+                            </div>
                         </div>
 
                         <div class="flex items-center gap-3">
@@ -67,6 +103,7 @@
 
                             <button
                                 class="bg-[rgba(244,244,245,0.25)] rounded-[4px] p-2"
+                                @click="editAction(index)"
                             >
                                 <img src="/assets/icons/edit2.svg" alt="" />
                             </button>
@@ -81,14 +118,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- <div
-                v-for="(summary, index) in actionsStore.actionSummaries"
-                :key="index"
-                class="p-2 text-white"
-            >
-                {{ summary }}
-            </div> -->
         </div>
 
         <!-- Right side -->
@@ -120,8 +149,7 @@
 
                 <div class="space-y-6 mt-4 flow">
                     <div
-                        v-for="(action, index) in actionsStore.actionsState
-                            .action_data"
+                        v-for="(action, index) in previewableActions"
                         :key="index"
                         class="p-4 rounded-md"
                     >
@@ -158,6 +186,96 @@
                             v-model="action.default_value"
                         />
 
+                        <select
+                            v-else-if="action.input_type === 'yes_no'"
+                            class="text-[#9E9E9E] text-[15px] mt-2 font-normal rounded-[14px] p-3 border border-[#2F2F30] focus:border-[#2F2F30] bg-transparent block w-full focus:outline-none focus:ring-0"
+                            v-model="action.default_value"
+                        >
+                            <option value="disabled">
+                                Choose default value
+                            </option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+
+                        <select
+                            v-else-if="
+                                [
+                                    'dropdown_single',
+
+                                    'multi_select',
+                                    'multi_select-table',
+                                ].includes(action.input_type)
+                            "
+                            v-model="action.default_value"
+                            class="text-[#9E9E9E] text-[15px] mt-2 font-normal rounded-[14px] p-3 border border-[#2F2F30] focus:border-[#2F2F30] bg-transparent block w-full focus:outline-none focus:ring-0"
+                        >
+                            <option value="" disabled>Choose an option</option>
+                            <option
+                                v-for="(opt, i) in action.options
+                                    ?.split('\n')
+                                    .filter((o) => o.trim())"
+                                :key="i"
+                                :value="opt.trim()"
+                            >
+                                {{ opt.trim() }}
+                            </option>
+                        </select>
+
+                        <!-- DROPDOWN & MULTI SELECT TYPES -->
+                        <div
+                            v-else-if="
+                                ['dropdown_multiple'].includes(
+                                    action.input_type
+                                )
+                            "
+                            class="space-y-2 mt-2"
+                        >
+                            <p class="text-[#9E9E9E] text-[14px]">
+                                Choose option(s):
+                            </p>
+
+                            <div
+                                v-for="(opt, i) in action.options
+                                    ?.split('\n')
+                                    .filter((o) => o.trim())"
+                                :key="i"
+                                class="flex items-center gap-2"
+                            >
+                                <label
+                                    class="flex items-center gap-2 cursor-pointer"
+                                >
+                                    <!-- checkbox is the peer -->
+                                    <input
+                                        type="checkbox"
+                                        :id="`opt-${index}-${i}`"
+                                        :value="opt.trim()"
+                                        v-model="selectedOptions[index]"
+                                        class="hidden peer"
+                                    />
+                                    <!-- custom box that changes color when checked -->
+                                    <span
+                                        class="w-4 h-4 border border-[#2F2F30] rounded-sm flex items-center justify-center peer-checked:bg-[#999999] peer-checked:border-white transition-colors"
+                                    >
+                                    </span>
+                                </label>
+                                <label
+                                    :for="`opt-${index}-${i}`"
+                                    class="text-[15px] text-[#C6CCD8] cursor-pointer"
+                                >
+                                    {{ opt.trim() }}
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- GET USER LIST -->
+                        <textarea
+                            v-else-if="action.action === 'get_list'"
+                            rows="4"
+                            class="w-full p-3 rounded-[3px] border border-[#2F2F30] bg-transparent mt-2 focus:border-[#2F2F30] focus:outline-none focus:ring-0"
+                            v-model="action.list_delimeter"
+                        ></textarea>
+
                         <!-- Optional: fallback -->
                         <p v-else class="text-gray-500 text-sm mt-2">
                             Unsupported input type
@@ -185,19 +303,80 @@
     </div>
 
     <Actions @new-action="actionsStore.addActionSummary"></Actions>
+    <Inputs
+        v-if="selectedForm"
+        :form-type="selectedForm"
+        :edit-data="
+            editingIndex !== null
+                ? actionsStore.actionsState.action_data[editingIndex]
+                : null
+        "
+        :edit-index="editingIndex"
+        @back="
+            () => {
+                selectedForm = null;
+                editingIndex = null;
+            }
+        "
+        @new-action="
+            (action) => {
+                selectedForm = null;
+                editingIndex = null;
+                actionsStore.addActionSummary(action);
+            }
+        "
+    />
 </template>
 
 <script setup>
 import Btn from "../Atoms/Button.vue";
 import Actions from "../Modals/Actions/Actions.vue";
 import { showModal } from "../../utils/utils";
-import { ref, watch, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useActionsStore } from "../../stores/action";
 import api from "../../lib/axios_global";
+import Inputs from "../Modals/Actions/Inputs.vue";
 
 const actionsStore = useActionsStore();
 
-const formValues = ref({});
+const previewableTypes = [
+    "get_user_input",
+    "get_list", // the only one for now
+    // later you can add "send_email", etc.
+];
+
+const previewableActions = computed(() =>
+    actionsStore.actionsState.action_data.filter((action) =>
+        previewableTypes.includes(action.action)
+    )
+);
+
+const selectedOptions = ref([]);
+
+// FOR MULTISELCT
+watch(
+    selectedOptions,
+    (newValues) => {
+        newValues.forEach((vals, i) => {
+            if (Array.isArray(vals)) {
+                actionsStore.actionsState.action_data[i].default_value =
+                    vals.join(",");
+                console.log(
+                    `Action ${i} default_value updated:`,
+                    actionsStore.actionsState.action_data[i].default_value
+                );
+            }
+        });
+    },
+    { deep: true }
+);
+const selectedForm = ref(null);
+const editingIndex = ref(null);
+
+function editAction(index) {
+    editingIndex.value = index;
+    selectedForm.value = actionsStore.actionsState.action_data[index].action; // pass correct form type
+}
 
 onMounted(async () => {
     const parts = window.location.pathname.split("/");
@@ -236,5 +415,35 @@ onMounted(async () => {
 .flow {
     height: calc(100vh - 300px);
     overflow-y: scroll;
+}
+
+.tag {
+    color: red !important;
+}
+
+.custom-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 1rem;
+    height: 1rem;
+    border: 1.5px solid #2f2f30;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.custom-checkbox:checked {
+    background-color: #705cf6;
+    border-color: #705cf6;
+}
+
+.custom-checkbox:checked::after {
+    content: "✓";
+    position: absolute;
+    color: white;
+    font-size: 0.75rem;
+    left: 3px;
+    top: -1px;
 }
 </style>

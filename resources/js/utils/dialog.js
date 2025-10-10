@@ -135,42 +135,42 @@ export class dialog {
     static toastSuccess(message) {
         notify.successTxt(message);
 
-        // Swal.fire({
-        //     // iconHtml: '<img src="/assets/images/icon-success.png">',
-        //     toast: true,
-        //     title: "Success",
-        //     text: message,
-        //     animation: true,
-        //     position: "top-end",
-        //     showConfirmButton: false,
-        //     showCloseButton: true,
-        //     timer: 3000,
-        //     timerProgressBar: true,
-        //     didOpen: (toast) => {
-        //         toast.addEventListener("mouseenter", Swal.stopTimer);
-        //         toast.addEventListener("mouseleave", Swal.resumeTimer);
-        //     },
-        // });
+        Swal.fire({
+            iconHtml: '<img src="/assets/images/icon-success.png">',
+            toast: true,
+            title: "Success",
+            text: message,
+            animation: true,
+            position: "top-end",
+            showConfirmButton: false,
+            showCloseButton: true,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener("mouseenter", Swal.stopTimer);
+                toast.addEventListener("mouseleave", Swal.resumeTimer);
+            },
+        });
     }
 
     static toastError(message) {
         notify.errorTxt(message);
-        // Swal.fire({
-        //     // iconHtml: '<img src="/assets/images/icon-error.png">',
-        //     toast: true,
-        //     title: "Error",
-        //     text: message,
-        //     // animation: true,
-        //     position: "top-end",
-        //     showConfirmButton: false,
-        //     showCloseButton: true,
-        //     timer: 3000,
-        //     timerProgressBar: true,
-        //     didOpen: (toast) => {
-        //         toast.addEventListener("mouseenter", Swal.stopTimer);
-        //         toast.addEventListener("mouseleave", Swal.resumeTimer);
-        //     },
-        // });
+        Swal.fire({
+            iconHtml: '<img src="/assets/images/icon-error.png">',
+            toast: true,
+            title: "Error",
+            text: message,
+            // animation: true,
+            position: "top-end",
+            showConfirmButton: false,
+            showCloseButton: true,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener("mouseenter", Swal.stopTimer);
+                toast.addEventListener("mouseleave", Swal.resumeTimer);
+            },
+        });
     }
 
     static close() {
