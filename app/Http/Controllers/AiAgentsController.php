@@ -344,6 +344,7 @@ public function build(Request $request)
             // ✅ Replace the entire array with what frontend sends
             $existingAction->action_data = json_encode($request->action_data);
             $existingAction->active = $active;
+            $existingAction->variables = $request->variables ?? json_encode($request->variables);
             $existingAction->save();
  
             $action = $existingAction;
@@ -356,6 +357,7 @@ public function build(Request $request)
             $newAction->active = $active;
             $newAction->action_data = json_encode($request->action_data);
             $newAction->action_type = $request->action ?? 'default';
+            $newAction->variables = $request->variables ?? json_encode($request->variables);
             $newAction->save();
  
             $action = $newAction;
