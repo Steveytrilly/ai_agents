@@ -93,7 +93,49 @@
                                 <p
                                     class="text-[14px] text-[rgba(255,255,255,0.75)]"
                                 >
-                                    Get user List
+                                    Get
+                                    <span
+                                        class="bg-[rgba(112,92,246,0.25)] p-1 rounded-[3px]"
+                                        >User List</span
+                                    >
+                                    with prompt
+                                    <span
+                                        class="bg-[rgba(112,92,246,0.25)] p-1 rounded-[3px]"
+                                        >{{ summary.user_prompt }}</span
+                                    >
+                                    and save to
+                                    <span
+                                        class="bg-[rgba(112,92,246,0.25)] p-1 rounded-[3px]"
+                                        >{{ summary.output_variable }}</span
+                                    >
+                                </p>
+                            </div>
+
+                            <div v-if="summary.type === 'contact_file_upload'">
+                                <p
+                                    class="text-[13px] font-semibold text-[rgba(255,255,255,0.90)]"
+                                >
+                                    Contact File Upload
+                                </p>
+
+                                <p
+                                    class="text-[14px] text-[rgba(255,255,255,0.75)]"
+                                >
+                                    Get
+                                    <span
+                                        class="bg-[rgba(112,92,246,0.25)] p-1 rounded-[3px]"
+                                        >Contact File Upload</span
+                                    >
+                                    with prompt
+                                    <span
+                                        class="bg-[rgba(112,92,246,0.25)] p-1 rounded-[3px]"
+                                        >{{ summary.user_prompt }}</span
+                                    >
+                                    and save to
+                                    <span
+                                        class="bg-[rgba(112,92,246,0.25)] p-1 rounded-[3px]"
+                                        >{{ summary.output_variable }}</span
+                                    >
                                 </p>
                             </div>
                         </div>
@@ -256,8 +298,7 @@
                                     <!-- custom box that changes color when checked -->
                                     <span
                                         class="w-4 h-4 border border-[#2F2F30] rounded-sm flex items-center justify-center peer-checked:bg-[#999999] peer-checked:border-white transition-colors"
-                                    >
-                                    </span>
+                                    ></span>
                                 </label>
                                 <label
                                     :for="`opt-${index}-${i}`"
@@ -275,6 +316,40 @@
                             class="w-full p-3 rounded-[3px] border border-[#2F2F30] bg-transparent mt-2 focus:border-[#2F2F30] focus:outline-none focus:ring-0"
                             v-model="action.list_delimeter"
                         ></textarea>
+
+                        <div
+                            class="flex justify-center items-center w-full"
+                            v-else-if="action.action === 'contact_file_upload'"
+                        >
+                            <label
+                                for="file-upload"
+                                class="w-full h-16 flex flex-col justify-center items-center border-2 border-dashed border-[#2F2F30] rounded-xl cursor-pointer hover:border-[#2F2F30] transition-colors"
+                            >
+                                <!-- <svg
+                                    class="w-12 h-12 text-blue-500 mb-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 12v8m0 0l-4-4m4 4l4-4m-4-8V4m0 0L8 8m4-4l4 4"
+                                    />
+                                </svg> -->
+
+                                <span class="text-gray-700 font-medium text-lg"
+                                    >Click here to upload a file</span
+                                >
+                            </label>
+
+                            <input
+                                id="file-upload"
+                                type="file"
+                                class="hidden"
+                            />
+                        </div>
 
                         <!-- Optional: fallback -->
                         <p v-else class="text-gray-500 text-sm mt-2">
@@ -339,11 +414,7 @@ import Inputs from "../Modals/Actions/Inputs.vue";
 
 const actionsStore = useActionsStore();
 
-const previewableTypes = [
-    "get_user_input",
-    "get_list", // the only one for now
-    // later you can add "send_email", etc.
-];
+const previewableTypes = ["get_user_input", "get_list", "contact_file_upload"];
 
 const previewableActions = computed(() =>
     actionsStore.actionsState.action_data.filter((action) =>
@@ -351,14 +422,43 @@ const previewableActions = computed(() =>
     )
 );
 
-const selectedOptions = ref([]);
+// ✅ initialize selectedOptions as an array of arrays
+const selectedOptions = ref(
+    actionsStore.actionsState.action_data.map((a) => {
+        if (["dropdown_multiple"].includes(a.input_type)) {
+            return a.default_value
+                ? a.default_value.split(",").map((x) => x.trim())
+                : [];
+        }
+        return [];
+    })
+);
 
 // FOR MULTISELCT
+
+watch(
+    () => actionsStore.actionsState.action_data,
+    (actions) => {
+        // Ensure selectedOptions matches action count
+        selectedOptions.value = actions.map((a, i) => {
+            const defaults = a.default_value
+                ? a.default_value.split(",").map((x) => x.trim())
+                : [];
+            return defaults;
+        });
+    },
+    { deep: true, immediate: true }
+);
+
 watch(
     selectedOptions,
     (newValues) => {
+        // Sync default_value with selected checkboxes
         newValues.forEach((vals, i) => {
-            if (Array.isArray(vals)) {
+            if (
+                Array.isArray(vals) &&
+                actionsStore.actionsState.action_data[i]
+            ) {
                 actionsStore.actionsState.action_data[i].default_value =
                     vals.join(",");
                 console.log(
@@ -370,6 +470,25 @@ watch(
     },
     { deep: true }
 );
+
+// Fall back to just incase of an error
+// watch(
+//     selectedOptions,
+//     (newValues) => {
+//         newValues.forEach((vals, i) => {
+//             if (Array.isArray(vals)) {
+//                 actionsStore.actionsState.action_data[i].default_value =
+//                     vals.join(",");
+//                 console.log(
+//                     `Action ${i} default_value updated:`,
+//                     actionsStore.actionsState.action_data[i].default_value
+//                 );
+//             }
+//         });
+//     },
+//     { deep: true }
+// );
+
 const selectedForm = ref(null);
 const editingIndex = ref(null);
 

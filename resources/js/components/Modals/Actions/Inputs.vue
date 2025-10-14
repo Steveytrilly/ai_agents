@@ -37,14 +37,14 @@
                                 Dropdown (Single)
                             </option>
                             <option value="dropdown_multiple">
-                                Dropdown (Multiple)
+                                Multi-Item Selector
                             </option>
-                            <option value="multi_select">
+                            <!-- <option value="multi_select">
                                 Multi-Item Selector
                             </option>
                             <option value="multi_select-table">
                                 Multi-Item Selector (Table view)
-                            </option>
+                            </option> -->
                         </select>
                     </div>
 
@@ -156,12 +156,17 @@
                     </div>
 
                     <div class="flex flex-col items-end mt-5">
-                        <button type="submit">submit</button>
+                        <button
+                            type="submit"
+                            class="bg-[#705CF6] px-6 py-1.5 rounded-[8px]"
+                        >
+                            Save
+                        </button>
                     </div>
                 </form>
             </div>
 
-            <div v-if="formType === 'get_list'">
+            <div v-else-if="formType === 'get_list'">
                 <span class="flex items-center gap-3">
                     <img src="/assets/icons/input.svg" />
                     <h2 class="text-xl font-semibold mb-2">Get List</h2>
@@ -226,7 +231,278 @@
                     </div>
 
                     <div class="flex flex-col items-end mt-5">
-                        <button type="submit">submit</button>
+                        <button
+                            type="submit"
+                            class="bg-[#705CF6] px-6 py-1.5 rounded-[8px]"
+                        >
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div v-else-if="formType === 'contact_file_upload'">
+                <span class="flex items-center gap-3">
+                    <img src="/assets/icons/input.svg" />
+                    <h2 class="text-xl font-semibold mb-2">
+                        Get User File For Contact Import
+                    </h2>
+                </span>
+
+                <form class="mt-10 space-y-6 flow" @submit.prevent="saveAction">
+                    <div>
+                        <label class="text-[15px] font-meduim"
+                            >User Prompt</label
+                        >
+                        <input
+                            v-model="form.user_prompt"
+                            type="text"
+                            class="w-full border border-[#2F2F30] focus:border-[#2F2F30] p-3 rounded-[14px] bg-transparent mt-2 focus:outline-none focus:ring-0"
+                        />
+                    </div>
+
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input
+                            type="checkbox"
+                            v-model="form.required"
+                            class="hidden peer"
+                        />
+                        <div
+                            class="w-5 h-5 border-2 border-gray-400 rounded-sm flex items-center justify-center peer-checked:bg-[#705CF6] peer-checked:border-[#705CF6]"
+                        >
+                            <!-- Checkmark -->
+                            <svg
+                                class="w-3 h-3 text-white hidden peer-checked:block"
+                                viewBox="0 0 24 24"
+                            >
+                                <path fill="currentColor" d="M20 6L9 17l-5-5" />
+                            </svg>
+                        </div>
+                        <span class="text-[#C6CCD8] text-[15px]"
+                            >Required?</span
+                        >
+                    </label>
+
+                    <div>
+                        <label class="text-[15px] font-meduim"
+                            >Output Variable *</label
+                        >
+                        <input
+                            v-model="form.output_variable"
+                            @input="formatOutputVariable"
+                            type="text"
+                            placeholder="contact_file_upload"
+                            required
+                            class="w-full border border-[#2F2F30] placeholder:text-[#9E9E9E] focus:border-[#2F2F30] p-3 rounded-[14px] bg-transparent mt-2 focus:outline-none focus:ring-0"
+                        />
+                    </div>
+
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" class="hidden peer" />
+                        <div
+                            class="w-5 h-5 border-2 border-gray-400 rounded-sm flex items-center justify-center peer-checked:bg-[#705CF6] peer-checked:border-[#705CF6]"
+                        >
+                            <!-- Checkmark -->
+                            <svg
+                                class="w-3 h-3 text-white hidden peer-checked:block"
+                                viewBox="0 0 24 24"
+                            >
+                                <path fill="currentColor" d="M20 6L9 17l-5-5" />
+                            </svg>
+                        </div>
+                        <span class="text-[#C6CCD8] text-[15px]"
+                            >Show File Uploaded</span
+                        >
+                    </label>
+
+                    <div class="flex flex-col items-end mt-5">
+                        <button
+                            type="submit"
+                            class="bg-[#705CF6] px-6 py-1.5 rounded-[8px]"
+                        >
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div v-else-if="formType === 'knowledge_file_upload'">
+                <span class="flex items-center gap-3">
+                    <img src="/assets/icons/input.svg" />
+                    <h2 class="text-xl font-semibold mb-2">
+                        Get User Knowledge File
+                    </h2>
+                </span>
+
+                <form class="mt-10 space-y-6 flow" @submit.prevent="saveAction">
+                    <div>
+                        <label class="text-[15px] font-meduim"
+                            >User Prompt</label
+                        >
+                        <input
+                            v-model="form.user_prompt"
+                            type="text"
+                            class="w-full border border-[#2F2F30] focus:border-[#2F2F30] p-3 rounded-[14px] bg-transparent mt-2 focus:outline-none focus:ring-0"
+                        />
+                    </div>
+
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input
+                            type="checkbox"
+                            v-model="form.required"
+                            class="hidden peer"
+                        />
+                        <div
+                            class="w-5 h-5 border-2 border-gray-400 rounded-sm flex items-center justify-center peer-checked:bg-[#705CF6] peer-checked:border-[#705CF6]"
+                        >
+                            <!-- Checkmark -->
+                            <svg
+                                class="w-3 h-3 text-white hidden peer-checked:block"
+                                viewBox="0 0 24 24"
+                            >
+                                <path fill="currentColor" d="M20 6L9 17l-5-5" />
+                            </svg>
+                        </div>
+                        <span class="text-[#C6CCD8] text-[15px]"
+                            >Required?</span
+                        >
+                    </label>
+
+                    <div>
+                        <label class="text-[15px] font-meduim"
+                            >Output Variable *</label
+                        >
+                        <input
+                            v-model="form.output_variable"
+                            @input="formatOutputVariable"
+                            type="text"
+                            placeholder="contact_file_upload"
+                            required
+                            class="w-full border border-[#2F2F30] placeholder:text-[#9E9E9E] focus:border-[#2F2F30] p-3 rounded-[14px] bg-transparent mt-2 focus:outline-none focus:ring-0"
+                        />
+                    </div>
+
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" class="hidden peer" />
+                        <div
+                            class="w-5 h-5 border-2 border-gray-400 rounded-sm flex items-center justify-center peer-checked:bg-[#705CF6] peer-checked:border-[#705CF6]"
+                        >
+                            <!-- Checkmark -->
+                            <svg
+                                class="w-3 h-3 text-white hidden peer-checked:block"
+                                viewBox="0 0 24 24"
+                            >
+                                <path fill="currentColor" d="M20 6L9 17l-5-5" />
+                            </svg>
+                        </div>
+                        <span class="text-[#C6CCD8] text-[15px]"
+                            >Show File Uploaded</span
+                        >
+                    </label>
+
+                    <div class="flex flex-col items-end mt-5">
+                        <button
+                            type="submit"
+                            class="bg-[#705CF6] px-6 py-1.5 rounded-[8px]"
+                        >
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div v-else-if="formType === 'user_confirmation'">
+                <span class="flex items-center gap-3">
+                    <img src="/assets/icons/input.svg" />
+                    <h2 class="text-xl font-semibold mb-2">
+                        Wait For User Confirmation
+                    </h2>
+                </span>
+
+                <form class="mt-10 space-y-6 flow" @submit.prevent="saveAction">
+                    <div>
+                        <label class="text-[15px] font-meduim"
+                            >Message To Show User</label
+                        >
+                        <input
+                            v-model="form.message_to_user"
+                            type="text"
+                            class="w-full border border-[#2F2F30] focus:border-[#2F2F30] p-3 rounded-[14px] bg-transparent mt-2 focus:outline-none focus:ring-0"
+                        />
+                    </div>
+
+                    <div class="flex flex-col items-end mt-5">
+                        <button
+                            type="submit"
+                            class="bg-[#705CF6] px-6 py-1.5 rounded-[8px]"
+                        >
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div v-else-if="formType === 'crawl'">
+                <span class="flex items-center gap-3">
+                    <img src="/assets/icons/input.svg" />
+                    <h2 class="text-xl font-semibold mb-2">
+                        Get Web Page Content
+                    </h2>
+                </span>
+
+                <form class="mt-10 space-y-6 flow" @submit.prevent="saveAction">
+                    <div>
+                        <label class="text-[15px] font-meduim">URL *</label>
+                        <input
+                            v-model="form.url"
+                            required
+                            type="url"
+                            class="w-full border border-[#2F2F30] focus:border-[#2F2F30] p-3 rounded-[14px] bg-transparent mt-2 focus:outline-none focus:ring-0"
+                        />
+                    </div>
+
+                    <div>
+                        <label class="text-[15px] font-meduim"
+                            >Crawling Mode *</label
+                        >
+                        <input
+                            v-model="form.crawl_mode"
+                            type="text"
+                            placeholder="Scrape one page (default)"
+                            required
+                            class="w-full border border-[#2F2F30] placeholder:text-[#9E9E9E] focus:border-[#2F2F30] p-3 rounded-[14px] bg-transparent mt-2 focus:outline-none focus:ring-0"
+                        />
+                    </div>
+
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input
+                            type="checkbox"
+                            v-model="form.required"
+                            class="hidden peer"
+                        />
+                        <div
+                            class="w-5 h-5 border-2 border-gray-400 rounded-sm flex items-center justify-center peer-checked:bg-[#705CF6] peer-checked:border-[#705CF6]"
+                        >
+                            <!-- Checkmark -->
+                            <svg
+                                class="w-3 h-3 text-white hidden peer-checked:block"
+                                viewBox="0 0 24 24"
+                            >
+                                <path fill="currentColor" d="M20 6L9 17l-5-5" />
+                            </svg>
+                        </div>
+                        <span class="text-[#C6CCD8] text-[15px]"
+                            >Required?</span
+                        >
+                    </label>
+
+                    <div class="flex flex-col items-end mt-5">
+                        <button
+                            type="submit"
+                            class="bg-[#705CF6] px-6 py-1.5 rounded-[8px]"
+                        >
+                            Save
+                        </button>
                     </div>
                 </form>
             </div>
