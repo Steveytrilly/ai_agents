@@ -38,5 +38,7 @@ Route::prefix('v1')->group(function () {
             ->name('ai_agent.details');
         Route::post('ai-agent/action/delete', [AiAgentsController::class, 'deleteAction'])
             ->name('ai_agents.delete_action');
+        Route::post('file/uploads/ai-agent', [AiAgentsController::class, 'uploadFile'])
+            ->name('ai_agents.upload_file');
     });
 });
