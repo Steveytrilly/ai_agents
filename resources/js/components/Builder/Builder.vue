@@ -138,6 +138,25 @@
                                     >
                                 </p>
                             </div>
+
+                            <div v-if="summary.type === 'user_confirmation'">
+                                <p
+                                    class="text-[13px] font-semibold text-[rgba(255,255,255,0.90)]"
+                                >
+                                    Wait for User Confirmation
+                                </p>
+
+                                <p
+                                    class="text-[14px] text-[rgba(255,255,255,0.75)]"
+                                >
+                                    Get user confirmation with message
+
+                                    <span
+                                        class="bg-[rgba(112,92,246,0.25)] p-1 rounded-[3px]"
+                                        >{{ summary.message_to_user }}</span
+                                    >
+                                </p>
+                            </div>
                         </div>
 
                         <div class="flex items-center gap-3">
@@ -317,6 +336,7 @@
                             v-model="action.list_delimeter"
                         ></textarea>
 
+                        <!-- GET USER FILE -->
                         <div
                             class="flex justify-center items-center w-full"
                             v-else-if="action.action === 'contact_file_upload'"
@@ -349,6 +369,14 @@
                                 type="file"
                                 class="hidden"
                             />
+                        </div>
+
+                        <div v-else-if="action.action === 'user_confirmation'">
+                            <p>{{ action.message_to_user }}</p>
+                            <span class="flex items-center gap-2">
+                                <Btn title="Continue"></Btn>
+                                <Btn class="bg-red-500" title="Cancel"></Btn>
+                            </span>
                         </div>
 
                         <!-- Optional: fallback -->
@@ -414,7 +442,12 @@ import Inputs from "../Modals/Actions/Inputs.vue";
 
 const actionsStore = useActionsStore();
 
-const previewableTypes = ["get_user_input", "get_list", "contact_file_upload"];
+const previewableTypes = [
+    "get_user_input",
+    "get_list",
+    "contact_file_upload",
+    "user_confirmation",
+];
 
 const previewableActions = computed(() =>
     actionsStore.actionsState.action_data.filter((action) =>

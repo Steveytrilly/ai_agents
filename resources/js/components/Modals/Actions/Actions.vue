@@ -160,6 +160,7 @@
                         </li>
 
                         <li
+                            @click="openForm('go')"
                             class="hover:bg-[#2F2F30] cursor-pointer p-3 rounded-[4px] flex items-center gap-3 border border-[#2F2F30]"
                         >
                             <img src="/assets/icons/input.svg" />

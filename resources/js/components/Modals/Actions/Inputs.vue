@@ -426,6 +426,7 @@
                         >
                         <input
                             v-model="form.message_to_user"
+                            required
                             type="text"
                             class="w-full border border-[#2F2F30] focus:border-[#2F2F30] p-3 rounded-[14px] bg-transparent mt-2 focus:outline-none focus:ring-0"
                         />
@@ -495,6 +496,36 @@
                             >Required?</span
                         >
                     </label>
+
+                    <div class="flex flex-col items-end mt-5">
+                        <button
+                            type="submit"
+                            class="bg-[#705CF6] px-6 py-1.5 rounded-[8px]"
+                        >
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div v-else-if="formType === 'go'">
+                <span class="flex items-center gap-3">
+                    <img src="/assets/icons/input.svg" />
+                    <h2 class="text-xl font-semibold mb-2">
+                        Click Go to Continue
+                    </h2>
+                </span>
+
+                <form class="mt-10 space-y-6 flow" @submit.prevent="saveAction">
+                    <div>
+                        <label class="text-[15px] font-meduim">Label</label>
+                        <input
+                            v-model="form.message_to_user"
+                            required
+                            type="text"
+                            class="w-full border border-[#2F2F30] focus:border-[#2F2F30] p-3 rounded-[14px] bg-transparent mt-2 focus:outline-none focus:ring-0"
+                        />
+                    </div>
 
                     <div class="flex flex-col items-end mt-5">
                         <button

@@ -191,7 +191,7 @@ export const useActionsStore = defineStore("actions", () => {
             }),
             user_confirmation: (a) => ({
                 type: a.action,
-                user_prompt: a.user_prompt || "",
+                message_to_user: a.message_to_user || "",
             }),
         };
         const generator = summaryTemplates[action.action];
