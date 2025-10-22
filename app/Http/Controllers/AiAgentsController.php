@@ -447,6 +447,6 @@ class AiAgentsController extends Controller
                 'message' => 'Failed to upload file: ' . $e->getMessage(),
             ], 500);
         }
-
+    }
 }
 }
